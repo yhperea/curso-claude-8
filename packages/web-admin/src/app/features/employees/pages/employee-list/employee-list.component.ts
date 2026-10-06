@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core'
+import { Component, DestroyRef, inject, OnInit } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 import { LucideAngularModule } from 'lucide-angular'
 import { EmployeeStore } from '../../store/employee.store'
@@ -13,13 +14,19 @@ import { EmployeeStore } from '../../store/employee.store'
 export class EmployeeListComponent implements OnInit {
   readonly store = inject(EmployeeStore)
   private readonly route = inject(ActivatedRoute)
+  private readonly destroyRef = inject(DestroyRef)
   restaurantId = ''
 
   ngOnInit(): void {
-    this.restaurantId = this.route.parent?.snapshot.params['restaurantId'] ?? ''
-    if (this.restaurantId) {
-      this.store.loadByRestaurant(this.restaurantId)
-    }
+    // El componente se reutiliza al cambiar de restaurante: hay que reaccionar a cada cambio de :restaurantId
+    this.route.parent?.paramMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => {
+        this.restaurantId = params.get('restaurantId') ?? ''
+        if (this.restaurantId) {
+          this.store.loadByRestaurant(this.restaurantId)
+        }
+      })
   }
 
   getRoleBadgeClass(role: string): string {

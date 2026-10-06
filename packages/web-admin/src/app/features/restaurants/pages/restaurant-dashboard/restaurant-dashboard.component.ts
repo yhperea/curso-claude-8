@@ -1,5 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core'
+import { Component, computed, inject } from '@angular/core'
+import { toSignal } from '@angular/core/rxjs-interop'
 import { ActivatedRoute, RouterLink } from '@angular/router'
+import { map, of } from 'rxjs'
 import { LucideAngularModule } from 'lucide-angular'
 import { RestaurantStore } from '../../store/restaurant.store'
 
@@ -10,16 +12,16 @@ import { RestaurantStore } from '../../store/restaurant.store'
   templateUrl: './restaurant-dashboard.component.html',
   styleUrl: './restaurant-dashboard.component.css'
 })
-export class RestaurantDashboardComponent implements OnInit {
+export class RestaurantDashboardComponent {
   private readonly route = inject(ActivatedRoute)
   private readonly restaurantStore = inject(RestaurantStore)
 
-  restaurantId = ''
-  restaurantName = signal('')
-
-  ngOnInit(): void {
-    this.restaurantId = this.route.parent?.snapshot.params['restaurantId'] ?? ''
-    const restaurant = this.restaurantStore.getById(this.restaurantId)
-    this.restaurantName.set(restaurant?.name ?? 'Restaurante')
-  }
+  // El componente se reutiliza al cambiar de restaurante: hay que reaccionar a cada cambio de :restaurantId
+  readonly restaurantId = toSignal<string, string>(
+    this.route.parent?.paramMap.pipe(map(params => params.get('restaurantId') ?? '')) ?? of(''),
+    { initialValue: '' }
+  )
+  readonly restaurantName = computed(() =>
+    this.restaurantStore.getById(this.restaurantId())?.name ?? 'Restaurante'
+  )
 }

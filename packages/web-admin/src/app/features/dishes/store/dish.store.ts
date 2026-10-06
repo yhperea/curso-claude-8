@@ -10,21 +10,30 @@ export class DishStore {
   private readonly _dishes = signal<Dish[]>([])
   private readonly _loading = signal(false)
   private readonly _error = signal<string | null>(null)
+  private _currentRestaurantId: string | null = null
 
   readonly dishes = this._dishes.asReadonly()
   readonly loading = this._loading.asReadonly()
   readonly error = this._error.asReadonly()
 
   async loadByRestaurant(restaurantId: string): Promise<void> {
+    // Al cambiar de restaurante no se deben seguir mostrando los datos del anterior
+    if (this._currentRestaurantId !== restaurantId) {
+      this._dishes.set([])
+    }
+    this._currentRestaurantId = restaurantId
     this._loading.set(true)
     this._error.set(null)
     try {
       const data = await firstValueFrom(this.service.getAll(restaurantId))
+      // Descarta respuestas de un restaurante que ya no es el actual
+      if (this._currentRestaurantId !== restaurantId) return
       this._dishes.set(data)
     } catch {
+      if (this._currentRestaurantId !== restaurantId) return
       this._error.set('No se pudieron cargar los platos.')
     } finally {
-      this._loading.set(false)
+      if (this._currentRestaurantId === restaurantId) this._loading.set(false)
     }
   }
 
