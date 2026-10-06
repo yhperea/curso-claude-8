@@ -1,0 +1,18 @@
+# Dependencias
+node_modules/
+
+# Builds y caché de Angular
+dist/
+.angular/
+
+# Base de datos SQLite local
+*.db
+*.db-journal
+
+# Entorno
+.env
+.env.*
+
+# Sistema / editor
+.DS_Store
+.claude/settings.local.json
