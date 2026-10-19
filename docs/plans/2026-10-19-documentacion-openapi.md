@@ -53,7 +53,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T1 — Añadir la dependencia de Swagger UI (~5 min)
 
-- [ ] **Qué:** Instalar `swagger-ui-express` como dependencia y `@types/swagger-ui-express` como devDependency del workspace de la API (`npm install swagger-ui-express -w @resttek/api` y `npm install -D @types/swagger-ui-express -w @resttek/api`).
+- [x] **Qué:** Instalar `swagger-ui-express` como dependencia y `@types/swagger-ui-express` como devDependency del workspace de la API (`npm install swagger-ui-express -w @resttek/api` y `npm install -D @types/swagger-ui-express -w @resttek/api`).
 - **Ficheros:** `packages/api/package.json`, `package-lock.json`
 - **Hecho cuando:** ambas aparecen en `packages/api/package.json` y `npm test` sigue en verde (66 tests).
 
