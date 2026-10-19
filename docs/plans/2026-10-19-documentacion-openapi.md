@@ -98,7 +98,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T5 — Documentar Restaurantes (privados y públicos) (~10 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - Documentar `POST/GET /api/v1/restaurants`, `GET/PUT /api/v1/restaurants/{id}`, `GET /api/v1/public/restaurants` y `GET /api/v1/public/restaurants/{id}`. Las protegidas van con `security: bearerAuth`, roles en la `description` y respuestas 401/403 `SimpleError`, 400/404 `ErrorResponse`.
   - Explicar en la descripción que `GET /restaurants` filtra por rol.
   - Añadir los esquemas `Restaurant` y `RestaurantInput`.
