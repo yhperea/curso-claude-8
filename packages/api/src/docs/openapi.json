@@ -311,6 +311,125 @@
         }
       }
     },
+    "/api/v1/restaurants/{restaurantId}/ingredients": {
+      "parameters": [{ "$ref": "#/components/parameters/RestaurantId" }],
+      "post": {
+        "tags": ["Ingredientes"],
+        "operationId": "createIngredient",
+        "summary": "Crear un ingrediente",
+        "description": "Roles: `admin`.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/IngredientInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ingrediente creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Ingredient" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+      "get": {
+        "tags": ["Ingredientes"],
+        "operationId": "listIngredients",
+        "summary": "Listar los ingredientes de un restaurante",
+        "description": "Roles: `admin`, `manager`, `cocinero`.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ingredientes del restaurante",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Ingredient" } }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
+    "/api/v1/restaurants/{restaurantId}/ingredients/{id}": {
+      "parameters": [
+        { "$ref": "#/components/parameters/RestaurantId" },
+        { "$ref": "#/components/parameters/Id" }
+      ],
+      "get": {
+        "tags": ["Ingredientes"],
+        "operationId": "getIngredient",
+        "summary": "Obtener un ingrediente",
+        "description": "Roles: `admin`, `manager`, `cocinero`. El ingrediente se busca por `id`; no se comprueba que pertenezca a `restaurantId`.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Ingrediente",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Ingredient" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "put": {
+        "tags": ["Ingredientes"],
+        "operationId": "updateIngredient",
+        "summary": "Actualizar un ingrediente",
+        "description": "Roles: `admin`. Reemplaza `name`, `unit` y `currentStock`; envía los tres.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/IngredientInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ingrediente actualizado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Ingredient" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "delete": {
+        "tags": ["Ingredientes"],
+        "operationId": "deleteIngredient",
+        "summary": "Borrar un ingrediente",
+        "description": "Roles: `admin`.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "204": { "description": "Ingrediente borrado" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
     "/api/v1/public/restaurants": {
       "get": {
         "tags": ["Restaurantes"],
@@ -489,6 +608,33 @@
           "ownerFirstName": { "type": "string", "minLength": 1 },
           "ownerLastName": { "type": "string", "minLength": 1 },
           "logoUrl": { "type": ["string", "null"] }
+        }
+      },
+      "IngredientUnit": {
+        "type": "string",
+        "enum": ["kg", "g", "l", "ml", "unidad"],
+        "description": "Se normaliza a minúsculas sin espacios"
+      },
+      "Ingredient": {
+        "type": "object",
+        "required": ["id", "name", "unit", "currentStock", "restaurantId", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "unit": { "$ref": "#/components/schemas/IngredientUnit" },
+          "currentStock": { "type": "number", "minimum": 0 },
+          "restaurantId": { "type": "string", "format": "uuid" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "IngredientInput": {
+        "type": "object",
+        "required": ["name", "unit"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "unit": { "$ref": "#/components/schemas/IngredientUnit" },
+          "currentStock": { "type": "number", "minimum": 0, "default": 0 }
         }
       },
       "AuthResponse": {

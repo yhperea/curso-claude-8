@@ -125,7 +125,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T7 — Documentar Ingredientes (~10 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - Documentar las 5 operaciones de `/api/v1/restaurants/{restaurantId}/ingredients[/{id}]`. Crear, editar y borrar son solo para admin; leer, para admin, manager y cocinero.
   - Respuestas: `DELETE` → 204 sin cuerpo; 400 por unidad inválida o stock negativo; 404.
   - Añadir los esquemas `Ingredient` (`unit` enum) e `IngredientInput`.
