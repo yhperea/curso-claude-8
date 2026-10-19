@@ -211,6 +211,106 @@
         }
       }
     },
+    "/api/v1/employees": {
+      "post": {
+        "tags": ["Empleados"],
+        "operationId": "createEmployee",
+        "summary": "Crear un empleado",
+        "description": "Roles: `admin`.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/EmployeeInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Empleado creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Employee" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+      "get": {
+        "tags": ["Empleados"],
+        "operationId": "listEmployees",
+        "summary": "Listar empleados",
+        "description": "Roles: `admin`. Paginado con `limit`/`offset` y filtrable por `role`.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "minimum": 1, "default": 10 } },
+          { "name": "offset", "in": "query", "required": false, "schema": { "type": "integer", "minimum": 0, "default": 0 } },
+          { "name": "role", "in": "query", "required": false, "schema": { "$ref": "#/components/schemas/Role" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de empleados",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Employee" } }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
+    "/api/v1/employees/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/Id" }],
+      "get": {
+        "tags": ["Empleados"],
+        "operationId": "getEmployee",
+        "summary": "Obtener un empleado",
+        "description": "Roles: `admin`.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Empleado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Employee" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/v1/restaurants/{restaurantId}/employees": {
+      "parameters": [{ "$ref": "#/components/parameters/RestaurantId" }],
+      "get": {
+        "tags": ["Empleados"],
+        "operationId": "listRestaurantEmployees",
+        "summary": "Listar los empleados de un restaurante",
+        "description": "Roles: `admin`.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Empleados del restaurante",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Employee" } }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
     "/api/v1/public/restaurants": {
       "get": {
         "tags": ["Restaurantes"],
@@ -330,6 +430,18 @@
           "email": { "type": "string", "format": "email" },
           "role": { "$ref": "#/components/schemas/Role" },
           "restaurantId": { "type": ["string", "null"], "format": "uuid", "description": "`null` para `admin` y `cliente`" }
+        }
+      },
+      "EmployeeInput": {
+        "type": "object",
+        "required": ["firstName", "lastName", "email", "password", "role"],
+        "properties": {
+          "firstName": { "type": "string", "minLength": 1 },
+          "lastName": { "type": "string", "minLength": 1 },
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string" },
+          "role": { "$ref": "#/components/schemas/Role" },
+          "restaurantId": { "type": ["string", "null"], "format": "uuid", "description": "Debe existir si se indica" }
         }
       },
       "LoginRequest": {

@@ -111,7 +111,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T6 — Documentar Empleados (~10 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - Documentar:
     - `POST /api/v1/employees` (201; body `EmployeeInput` con `password`, `role` enum y `restaurantId` opcional).
     - `GET /api/v1/employees` (query `limit` por defecto 10, `offset` por defecto 0, `role`).
