@@ -149,7 +149,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T9 — Documentar Pedidos (~10 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - Documentar:
     - `POST /api/v1/orders` (201; body `OrderInput` con `restaurantId`, `tableId` opcional e `items[]` con `dishId`, `quantity` y `notes`; la descripción explica que se expande a N ítems).
     - `GET /api/v1/orders/active` (query `restaurantId` obligatoria, 400 `SimpleError` si falta).
