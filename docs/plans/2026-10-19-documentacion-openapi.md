@@ -77,7 +77,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T3 — Utilidades de test de contrato y contrato de `/health` (~10 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - Crear `openapi.test-utils.ts` con:
     - `tokenFor(role, restaurantId?)`: firma un JWT con el secreto por defecto.
     - `expectMatchesSpec(method, specPath, res)`: comprueba que `res.status` está documentado en esa operación. Si la respuesta documentada tiene esquema JSON, también que las claves del body (o del primer elemento, si es array) coinciden con las `properties` del esquema, resolviendo `$ref`.
