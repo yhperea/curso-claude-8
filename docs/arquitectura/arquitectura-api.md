@@ -260,6 +260,8 @@ La excepción es `employee`: como sus rutas están repartidas en tres ficheros, 
 
 ## Endpoints
 
+> La referencia completa (cuerpos, respuestas, códigos de error) es el documento OpenAPI: ver [Documentación OpenAPI](#documentación-openapi). Las tablas siguientes son un resumen.
+
 Todos cuelgan de `/api/v1`. La columna **Roles** indica qué valores de `req.user.role` acepta `authorize()`; “autenticado” significa que basta con un JWT válido, sin filtro de rol.
 
 ### Públicos (sin autenticación)
@@ -326,6 +328,21 @@ Ninguna ruta de pedidos aplica `authorize()`: cualquier usuario autenticado pued
 
 Al crear un pedido, el servicio **expande las cantidades**: un ítem con `quantity: 3` se guarda como 3 filas de `order_items` con `quantity: 1` cada una, para poder seguir el estado de cada unidad por separado.
 
+### Documentación OpenAPI
+
+La API publica un documento **OpenAPI 3.1**, sin autenticación:
+
+| Ruta | Qué sirve |
+| --- | --- |
+| `GET /api/v1/docs/openapi.json` | El spec en JSON, para importarlo en Postman, generar clientes, etc. |
+| `/api/v1/docs` | Swagger UI (`swagger-ui-express`). Pulsa **Authorize** y pega el `token` de `POST /api/v1/auth/login` para probar los endpoints protegidos |
+
+El spec se escribe **a mano** en `src/docs/openapi.json` (lo carga `loadOpenApiSpec()` de `src/docs/openapi.ts`) y documenta el comportamiento real, incluidas sus rarezas (los dos formatos de error, el 400 de `PATCH .../status` con un pedido inexistente). Tres tipos de test lo mantienen sincronizado con el código:
+
+- `openapi.test.ts`: validez estructural (`$ref` que resuelven, `operationId` únicos, parámetros de ruta declarados).
+- `contract.<grupo>.test.ts`: llaman a cada endpoint con `supertest` y, con `expectMatchesSpec()` (`openapi.test-utils.ts`), comprueban que el código de estado está documentado y que las claves del cuerpo coinciden con el esquema. Los tokens se firman con `tokenFor(role, restaurantId)`.
+- `openapi.coverage.test.ts`: compara las rutas de `routeMounts` (exportado por `app.ts`) + `/health` con las operaciones del spec, en ambos sentidos. **Si añades o cambias un endpoint sin actualizar el spec, falla.**
+
 ---
 
 ## Middlewares
@@ -373,6 +390,7 @@ Definidos en `tsconfig.json` (`baseUrl: ./src`). En tiempo de ejecución los res
 | `@controllers/*` | `src/controllers/*` |
 | `@routes/*` | `src/routes/*` |
 | `@scripts/*` | `src/scripts/*` |
+| `@docs/*` | `src/docs/*` |
 
 Los imports llevan extensión `.js` (`import { dbConfig } from '@config/database.js'`) porque el paquete es ESM (`"type": "module"`, `module: nodenext`).
 
@@ -402,4 +420,4 @@ Con **Vitest** (`npm test` desde la raíz, o `npm run test:watch` dentro de `pac
 - Dominio y casos de uso de `employee`, con dobles en `contexts/employee/application/mocks/`
 - Servicios y repositorios de `restaurant`, `ingredient` y `order`, con dobles en `repositories/mocks/`
 
-**No hay tests de integración HTTP.** `supertest` figura como dependencia de desarrollo pero no se usa en ningún test, así que las rutas, los middlewares y el `errorHandler` no están cubiertos.
+- Tests HTTP de contrato OpenAPI en `src/docs/` (ver [Documentación OpenAPI](#documentación-openapi)), que con `supertest` recorren todas las rutas sobre la BD en memoria y cubren de paso los middlewares y el `errorHandler`.

@@ -49,13 +49,14 @@ Conviven **dos estilos**; identifica cuál aplica antes de tocar código:
 
 Convenciones transversales:
 
-- ESM con `module: nodenext`: los imports llevan extensión **`.js`** y se usan path aliases (`@config/*`, `@errors/*`, `@shared/*`, `@employee/*`, `@models/*`, `@repositories/*`, `@services/*`, `@controllers/*`, `@routes/*`). tsconfig es estricto (`exactOptionalPropertyTypes`, `noUncheckedIndexedAccess`, `verbatimModuleSyntax` → usa `import type`).
+- ESM con `module: nodenext`: los imports llevan extensión **`.js`** y se usan path aliases (`@config/*`, `@errors/*`, `@shared/*`, `@employee/*`, `@models/*`, `@repositories/*`, `@services/*`, `@controllers/*`, `@routes/*`, `@docs/*`). tsconfig es estricto (`exactOptionalPropertyTypes`, `noUncheckedIndexedAccess`, `verbatimModuleSyntax` → usa `import type`).
 - Repositorios: `save()` decide UPDATE vs INSERT; el paso `snake_case`→`camelCase` se hace con alias en el SQL.
 - Errores: `AppError` (abstracta) → `errors/DomainErrors.ts`. El `errorHandler` mapea el código HTTP **por nombre de clase**: los `*NotFoundError` listados → 404, `InvalidCredentialsError` → 401, cualquier otro `AppError` → 400. Al añadir un error 404 nuevo hay que registrarlo ahí (`OrderNotFoundError` no lo está). `OrderController` es la excepción: hace su propio try/catch en vez de `next(error)`.
 - BD: `config/database.ts` exporta la instancia `dbConfig`; las tablas se crean en `runInitialMigrations()` al arrancar (no hay herramienta de migraciones). Fichero `packages/api/resttek.db`; con `NODE_ENV=test` usa `:memory:`.
 - Endpoints bajo `/api/v1` (salvo `/health`). Rutas públicas sin auth en `/api/v1/public/...`. Al crear un pedido, cada ítem con `quantity: N` se expande a N filas de `order_items` para seguir el estado de cada unidad.
+- OpenAPI 3.1 escrito a mano en `src/docs/openapi.json`, servido en `/api/v1/docs/openapi.json` y con Swagger UI en `/api/v1/docs`. **Al añadir o cambiar un endpoint, actualiza el spec y su `src/docs/contract.<grupo>.test.ts`**: `openapi.coverage.test.ts` falla si una ruta de `routeMounts` (en `app.ts`; añade ahí los routers nuevos) no está documentada.
 - Env: `PORT`, `NODE_ENV`, `JWT_SECRET` (tiene valor por defecto).
-- Tests unitarios junto al código (`*.test.ts`), con dobles en `contexts/employee/application/mocks/` y `repositories/mocks/`. No hay tests HTTP (supertest instalado pero sin usar).
+- Tests unitarios junto al código (`*.test.ts`), con dobles en `contexts/employee/application/mocks/` y `repositories/mocks/`. Los únicos tests HTTP son los de contrato OpenAPI (`src/docs/contract.*.test.ts`, supertest sobre la BD en memoria; tokens con `tokenFor()` de `openapi.test-utils.ts`).
 
 ## Arquitectura de los frontends
 

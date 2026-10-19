@@ -194,7 +194,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T13 — Actualizar documentación del proyecto (~5 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - En `docs/arquitectura/arquitectura-api.md`, sección "Endpoints": indicar que la referencia completa es `/api/v1/docs` (Swagger UI) y `/api/v1/docs/openapi.json`, que el fuente está en `packages/api/src/docs/openapi.json` y que los tests de contrato fallan si una ruta no está documentada.
   - En `CLAUDE.md`:
     - Añadir `@docs/*` a la lista de alias.
