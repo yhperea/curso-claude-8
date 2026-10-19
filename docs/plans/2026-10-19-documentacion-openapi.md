@@ -183,7 +183,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T12 — Test de cobertura rutas de Express ↔ spec (~10 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - Crear `openapi.coverage.test.ts`:
     - Recorrer `routeMounts` y los `router.stack[].route` (`path` + `methods`) para construir la lista real de operaciones. Convertir `:param` en `{param}` y quitar la barra final; añadir `GET /health`.
     - Comprobar que coincide **exactamente**, en ambos sentidos, con las operaciones de `spec.paths`, excluyendo el prefijo `/api/v1/docs`.
