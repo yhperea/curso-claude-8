@@ -136,7 +136,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T8 — Documentar Platos (privados y carta pública) (~10 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - Documentar las 5 operaciones de `/api/v1/restaurants/{restaurantId}/dishes[/{id}]` y `GET /api/v1/public/restaurants/{restaurantId}/dishes`. La carta pública solo devuelve los platos con `available: true`.
   - Añadir los esquemas `Dish` (`category` enum, `ingredients[]` con `ingredientId` y `quantity`) y `DishInput`.
   - Escribir `contract.dish.test.ts`:

@@ -430,6 +430,145 @@
         }
       }
     },
+    "/api/v1/restaurants/{restaurantId}/dishes": {
+      "parameters": [{ "$ref": "#/components/parameters/RestaurantId" }],
+      "post": {
+        "tags": ["Platos"],
+        "operationId": "createDish",
+        "summary": "Crear un plato",
+        "description": "Roles: `admin`, `manager`.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DishInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Plato creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Dish" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+      "get": {
+        "tags": ["Platos"],
+        "operationId": "listDishes",
+        "summary": "Listar todos los platos de un restaurante",
+        "description": "Roles: `admin`, `manager`, `camarero`, `cocinero`. Incluye los no disponibles.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Platos del restaurante",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Dish" } }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
+    "/api/v1/restaurants/{restaurantId}/dishes/{id}": {
+      "parameters": [
+        { "$ref": "#/components/parameters/RestaurantId" },
+        { "$ref": "#/components/parameters/Id" }
+      ],
+      "get": {
+        "tags": ["Platos"],
+        "operationId": "getDish",
+        "summary": "Obtener un plato",
+        "description": "Roles: `admin`, `manager`, `camarero`, `cocinero`. El plato se busca por `id`; no se comprueba que pertenezca a `restaurantId`.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Plato",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Dish" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "put": {
+        "tags": ["Platos"],
+        "operationId": "updateDish",
+        "summary": "Actualizar un plato",
+        "description": "Roles: `admin`, `manager`. Reemplaza todos los campos, incluida la lista de ingredientes (vacía si no se envía); envía también `available`.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DishInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Plato actualizado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Dish" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+      "delete": {
+        "tags": ["Platos"],
+        "operationId": "deleteDish",
+        "summary": "Borrar un plato",
+        "description": "Roles: `admin`, `manager`. Borra en cascada sus ingredientes asociados.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "204": { "description": "Plato borrado" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/v1/public/restaurants/{restaurantId}/dishes": {
+      "parameters": [{ "$ref": "#/components/parameters/RestaurantId" }],
+      "get": {
+        "tags": ["Platos"],
+        "operationId": "listPublicDishes",
+        "summary": "Carta pública de un restaurante",
+        "description": "Público. Solo devuelve los platos con `available: true`.",
+        "responses": {
+          "200": {
+            "description": "Platos disponibles",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Dish" } }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/public/restaurants": {
       "get": {
         "tags": ["Restaurantes"],
@@ -635,6 +774,52 @@
           "name": { "type": "string", "minLength": 1 },
           "unit": { "$ref": "#/components/schemas/IngredientUnit" },
           "currentStock": { "type": "number", "minimum": 0, "default": 0 }
+        }
+      },
+      "DishCategory": {
+        "type": "string",
+        "enum": ["entrante", "principal", "postre", "bebida"],
+        "description": "Se normaliza a minúsculas sin espacios"
+      },
+      "DishIngredient": {
+        "type": "object",
+        "required": ["ingredientId", "quantity"],
+        "properties": {
+          "ingredientId": { "type": "string", "format": "uuid" },
+          "quantity": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      },
+      "Dish": {
+        "type": "object",
+        "required": ["id", "name", "description", "price", "category", "available", "restaurantId", "ingredients", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "description": { "type": ["string", "null"] },
+          "price": { "type": "number", "exclusiveMinimum": 0 },
+          "category": { "$ref": "#/components/schemas/DishCategory" },
+          "available": { "type": "boolean" },
+          "restaurantId": { "type": "string", "format": "uuid" },
+          "ingredients": { "type": "array", "items": { "$ref": "#/components/schemas/DishIngredient" } },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DishInput": {
+        "type": "object",
+        "required": ["name", "price", "category"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "description": { "type": ["string", "null"], "default": null },
+          "price": { "type": "number", "exclusiveMinimum": 0 },
+          "category": { "$ref": "#/components/schemas/DishCategory" },
+          "available": { "type": "boolean", "default": true, "description": "Por defecto `true` al crear; obligatorio en la práctica al actualizar" },
+          "ingredients": {
+            "type": "array",
+            "default": [],
+            "description": "Una cantidad no positiva provoca un 500",
+            "items": { "$ref": "#/components/schemas/DishIngredient" }
+          }
         }
       },
       "AuthResponse": {
