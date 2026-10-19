@@ -176,7 +176,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T11 — Exponer los montajes de rutas de `app.ts` (refactor) (~5 min)
 
-- [ ] **Qué:** Extraer los `app.use('/api/v1/...', router)` de negocio a un array exportado `routeMounts: { path: string; router: Router }[]`, recorrido con un bucle en el mismo orden actual. `/health` y `/api/v1/docs` quedan fuera del array. No cambia ningún comportamiento.
+- [x] **Qué:** Extraer los `app.use('/api/v1/...', router)` de negocio a un array exportado `routeMounts: { path: string; router: Router }[]`, recorrido con un bucle en el mismo orden actual. `/health` y `/api/v1/docs` quedan fuera del array. No cambia ningún comportamiento.
 - **Ficheros:** `packages/api/src/app.ts`
 - **Depende de:** T10
 - **Hecho cuando:** `npm test` sigue en verde sin modificar ningún test existente.
