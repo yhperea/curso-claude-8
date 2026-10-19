@@ -9,6 +9,7 @@ import dishRoutes from '@routes/dish.routes.js'
 import publicRestaurantRoutes from '@routes/restaurant.public.routes.js'
 import publicDishRoutes from '@routes/dish.public.routes.js'
 import orderRoutes from '@routes/order.routes.js'
+import docsRoutes from '@routes/docs.routes.js'
 import { errorHandler } from '@shared/infrastructure/http/errorHandler.js'
 
 const app = express()
@@ -16,6 +17,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+app.use('/api/v1/docs', docsRoutes)
 app.use('/api/v1/orders', orderRoutes)
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/employees', employeeRoutes)

@@ -164,7 +164,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T10 — Servir el spec y la Swagger UI (~10 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - Crear `routes/docs.routes.ts`:
     - `GET /openapi.json` devuelve `loadOpenApiSpec()`.
     - `/` sirve `swaggerUi.serve` + `swaggerUi.setup(spec)`.
