@@ -8,7 +8,9 @@ describe('Docs routes', () => {
 
         expect(res.status).toBe(200)
         expect(res.headers['content-type']).toMatch(/application\/json/)
-        expect(res.body.openapi).toMatch(/^3\./)
+        expect(res.body.openapi).toMatch(/^3\.1\./)
+        expect(res.body.info).toMatchObject({ title: expect.any(String), version: expect.any(String) })
+        expect(res.body.components.securitySchemes.bearerAuth).toBeDefined()
         expect(res.body.paths['/health']).toBeDefined()
     })
 

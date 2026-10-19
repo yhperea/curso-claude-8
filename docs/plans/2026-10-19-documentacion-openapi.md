@@ -218,20 +218,20 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### Funcionales
 
-- [ ] **CA1:** Dado el API arrancado, cuando se hace `GET /api/v1/docs/openapi.json` sin token, entonces responde 200 con un JSON OpenAPI 3.1 válido (`openapi`, `info`, `paths`, `components`).
-- [ ] **CA2:** Dado el API arrancado, cuando se abre `/api/v1/docs` en el navegador, entonces se muestra la Swagger UI con los endpoints agrupados por tag. Tras pulsar "Authorize" con un JWT válido se pueden ejecutar los endpoints protegidos.
-- [ ] **CA3:** Dada cualquier ruta montada en `app.ts`, cuando se ejecuta `openapi.coverage.test.ts`, entonces la ruta aparece en el spec con el mismo método. Recíprocamente, toda operación del spec existe en Express.
-- [ ] **CA4:** Dado cada endpoint protegido, cuando se consulta su operación en el spec, entonces declara `security: bearerAuth`, enumera en su descripción los roles permitidos (tal como están en `authorize()`) y documenta 401, y también 403 si hay `authorize()`.
-- [ ] **CA5:** Dado cada endpoint, cuando los tests de contrato lo llaman con supertest, entonces el código real está entre los documentados y las claves del cuerpo JSON coinciden con las del esquema de esa respuesta.
-- [ ] **CA6:** Dados los enums del dominio (`unit`, `category`, `status`, `role`), cuando se consultan en el spec, entonces sus valores coinciden con los de `models/*.model.ts` y `Role`.
-- [ ] **CA7:** Dado el spec, cuando se valida estructuralmente, entonces todos los `$ref` resuelven, los `operationId` son únicos y todos los parámetros de ruta están declarados.
+- [x] **CA1:** Dado el API arrancado, cuando se hace `GET /api/v1/docs/openapi.json` sin token, entonces responde 200 con un JSON OpenAPI 3.1 válido (`openapi`, `info`, `paths`, `components`).
+- [x] **CA2:** Dado el API arrancado, cuando se abre `/api/v1/docs` en el navegador, entonces se muestra la Swagger UI con los endpoints agrupados por tag. Tras pulsar "Authorize" con un JWT válido se pueden ejecutar los endpoints protegidos.
+- [x] **CA3:** Dada cualquier ruta montada en `app.ts`, cuando se ejecuta `openapi.coverage.test.ts`, entonces la ruta aparece en el spec con el mismo método. Recíprocamente, toda operación del spec existe en Express.
+- [x] **CA4:** Dado cada endpoint protegido, cuando se consulta su operación en el spec, entonces declara `security: bearerAuth`, enumera en su descripción los roles permitidos (tal como están en `authorize()`) y documenta 401, y también 403 si hay `authorize()`.
+- [x] **CA5:** Dado cada endpoint, cuando los tests de contrato lo llaman con supertest, entonces el código real está entre los documentados y las claves del cuerpo JSON coinciden con las del esquema de esa respuesta.
+- [x] **CA6:** Dados los enums del dominio (`unit`, `category`, `status`, `role`), cuando se consultan en el spec, entonces sus valores coinciden con los de `models/*.model.ts` y `Role`.
+- [x] **CA7:** Dado el spec, cuando se valida estructuralmente, entonces todos los `$ref` resuelven, los `operationId` son únicos y todos los parámetros de ruta están declarados.
 
 ### Técnicos
 
-- [ ] Se respetan los dos estilos de arquitectura: el router de docs sigue el estilo por capas (`routes/`), `contexts/employee` no se modifica y no se toca ningún controlador, servicio ni repositorio.
-- [ ] Los imports usan alias con extensión `.js` e `import type` donde corresponda. `npx tsc --noEmit -p packages/api` no introduce errores nuevos (solo los previos de `src/scripts/seed.ts`).
-- [ ] Hay tests que cubren los criterios funcionales y `npm test` pasa en verde.
-- [ ] La única dependencia nueva es `swagger-ui-express` (+ `@types/swagger-ui-express` en dev), justificada abajo.
+- [x] Se respetan los dos estilos de arquitectura: el router de docs sigue el estilo por capas (`routes/`), `contexts/employee` no se modifica y no se toca ningún controlador, servicio ni repositorio.
+- [x] Los imports usan alias con extensión `.js` e `import type` donde corresponda. `npx tsc --noEmit -p packages/api` no introduce errores nuevos (solo los previos de `src/scripts/seed.ts`).
+- [x] Hay tests que cubren los criterios funcionales y `npm test` pasa en verde.
+- [x] La única dependencia nueva es `swagger-ui-express` (+ `@types/swagger-ui-express` en dev), justificada abajo.
 
 ## Riesgos y decisiones
 
