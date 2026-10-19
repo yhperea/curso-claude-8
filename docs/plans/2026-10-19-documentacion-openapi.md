@@ -88,7 +88,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T4 — Documentar Auth (~10 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - Documentar `POST /api/v1/auth/login` (200, 401 `ErrorResponse`) y `POST /api/v1/auth/register` (201, 400 `ErrorResponse` por email duplicado, email inválido o campos vacíos).
   - Añadir los esquemas `LoginRequest`, `RegisterRequest`, `AuthResponse` (`{ token, employee }`) y `Employee` (`id`, `firstName`, `lastName`, `email`, `role` enum, `restaurantId` nullable).
   - Escribir `contract.auth.test.ts`: registrar un cliente con un email único, hacer login con él y probar un login con contraseña errónea, aplicando `expectMatchesSpec` en cada caso.

@@ -41,6 +41,75 @@
           }
         }
       }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "operationId": "login",
+        "summary": "Iniciar sesión",
+        "description": "Público. Válido para empleados y clientes. Devuelve el JWT que hay que enviar como `Bearer` en el resto de endpoints.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Credenciales correctas",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Email inexistente o contraseña incorrecta (`InvalidCredentialsError`)",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "operationId": "registerClient",
+        "summary": "Registrar un cliente",
+        "description": "Público. Crea un usuario con rol `cliente` y sin restaurante, y devuelve su token.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RegisterRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cliente registrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Email ya en uso (`DuplicatedEmailError`), email con formato inválido (`InvalidEmailError`) o nombre/apellido vacíos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
     }
   },
   "components": {
@@ -51,7 +120,92 @@
         "bearerFormat": "JWT"
       }
     },
+    "responses": {
+      "BadRequest": {
+        "description": "Datos inválidos (error de dominio)",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Falta el token, está mal formado o no es válido",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/SimpleError" }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "El rol del token no está entre los permitidos",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/SimpleError" }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "El recurso no existe",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      },
+      "InternalError": {
+        "description": "Error no controlado (p. ej. faltan campos obligatorios que no valida el dominio)",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      }
+    },
     "schemas": {
+      "Role": {
+        "type": "string",
+        "enum": ["admin", "manager", "camarero", "cocinero", "cliente"]
+      },
+      "Employee": {
+        "type": "object",
+        "description": "Usuario del sistema (empleado o cliente). Nunca incluye la contraseña.",
+        "required": ["id", "firstName", "lastName", "email", "role", "restaurantId"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "role": { "$ref": "#/components/schemas/Role" },
+          "restaurantId": { "type": ["string", "null"], "format": "uuid", "description": "`null` para `admin` y `cliente`" }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email", "examples": ["admin@resttek.com"] },
+          "password": { "type": "string", "examples": ["admin@resttek.com"] }
+        }
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "required": ["firstName", "lastName", "email", "password"],
+        "properties": {
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string" }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "required": ["token", "employee"],
+        "properties": {
+          "token": { "type": "string", "description": "JWT con `id`, `role` y `restaurantId`" },
+          "employee": { "$ref": "#/components/schemas/Employee" }
+        }
+      },
       "ErrorResponse": {
         "type": "object",
         "required": ["error", "message"],
