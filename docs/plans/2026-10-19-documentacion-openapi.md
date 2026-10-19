@@ -206,7 +206,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T14 — Verificación final (~5 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - Ejecutar `npm test` y `npx tsc --noEmit -p packages/api`; este último solo puede dar los errores previos de `src/scripts/seed.ts`.
   - Arrancar `npm run dev:api` y comprobar `curl -s localhost:3000/api/v1/docs/openapi.json | head -c 200` y que `http://localhost:3000/api/v1/docs` muestra la Swagger UI.
   - Desde la Swagger UI, autorizar con el token de `admin@resttek.com` y ejecutar `GET /api/v1/restaurants`.

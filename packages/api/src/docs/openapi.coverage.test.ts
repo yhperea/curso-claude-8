@@ -11,7 +11,8 @@ const toOpenApiPath = (path: string): string =>
 
 const expressOperations = (): string[] => {
     const operations = routeMounts.flatMap(({ path: prefix, router }) =>
-        (router.stack as RouteLayer[])
+        // Los tipos de Express no exponen route.methods; el runtime (router@2) sí.
+        (router.stack as unknown as RouteLayer[])
             .filter(layer => layer.route)
             .flatMap(({ route }) =>
                 Object.keys(route!.methods)
