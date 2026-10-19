@@ -59,7 +59,7 @@ Publicar un documento OpenAPI 3.1 que describa los 29 endpoints de la API: rutas
 
 ### T2 — Esqueleto del spec, cargador y test estructural (~10 min)
 
-- [ ] **Qué:**
+- [x] **Qué:**
   - Crear `openapi.json` con:
     - `openapi: "3.1.0"`, `info` (título, versión `1.0.0`, descripción con roles y credenciales de ejemplo del seed) y `servers` (`http://localhost:3000`).
     - Los `tags` (Health, Auth, Restaurantes, Empleados, Ingredientes, Platos, Pedidos).

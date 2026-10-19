@@ -25,7 +25,8 @@
       "@services/*": ["services/*"],
       "@repositories/*": ["repositories/*"],
       "@models/*": ["models/*"],
-      "@scripts/*": ["scripts/*"]
+      "@scripts/*": ["scripts/*"],
+      "@docs/*": ["docs/*"]
     }
   },
   "include": ["src/**/*.ts"]

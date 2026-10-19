@@ -1,0 +1,72 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Resttek API",
+    "version": "1.0.0",
+    "description": "API REST de Resttek, plataforma de gestión de restaurantes.\n\n## Autenticación\n\nLos endpoints protegidos exigen la cabecera `Authorization: Bearer <token>`. El token (JWT con `id`, `role` y `restaurantId`) se obtiene con `POST /api/v1/auth/login` o `POST /api/v1/auth/register`.\n\n## Roles\n\n`admin`, `manager` (gerente), `camarero`, `cocinero` y `cliente`. Cada operación indica en su descripción qué roles admite. Si solo dice **autenticado**, basta con un token válido de cualquier rol.\n\n## Errores\n\nConviven dos formatos:\n\n- `ErrorResponse` (`{ error, message }`): errores de dominio gestionados por el `errorHandler`. `error` es el nombre de la clase de error (p. ej. `RestaurantNotFoundError`).\n- `SimpleError` (`{ error }`): errores de autenticación (401), autorización (403) y todos los de `/api/v1/orders`.\n\n## Datos de prueba\n\nTras `npm run seed`, la contraseña de cada usuario es su propio email: `admin@resttek.com`, `gerente1@resttek.com`, `cocinero1@resttek.com`, `camarero1@resttek.com`, `cliente1@resttek.com`."
+  },
+  "servers": [
+    { "url": "http://localhost:3000", "description": "Desarrollo local" }
+  ],
+  "tags": [
+    { "name": "Health", "description": "Estado del servicio" },
+    { "name": "Auth", "description": "Login y registro de clientes" },
+    { "name": "Restaurantes", "description": "Gestión y consulta pública de restaurantes" },
+    { "name": "Empleados", "description": "Gestión de empleados (solo admin)" },
+    { "name": "Ingredientes", "description": "Inventario de ingredientes de un restaurante" },
+    { "name": "Platos", "description": "Carta de un restaurante" },
+    { "name": "Pedidos", "description": "Pedidos y estado de cada unidad pedida" }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "operationId": "getHealth",
+        "summary": "Healthcheck",
+        "description": "Público. No lleva el prefijo `/api/v1`.",
+        "responses": {
+          "200": {
+            "description": "El servicio está levantado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["status"],
+                  "properties": {
+                    "status": { "type": "string", "const": "ok" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error", "message"],
+        "properties": {
+          "error": { "type": "string", "description": "Nombre de la clase de error", "examples": ["RestaurantNotFoundError"] },
+          "message": { "type": "string", "examples": ["Restaurant not found"] }
+        }
+      },
+      "SimpleError": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": { "type": "string", "examples": ["Unauthorized: No token provided"] }
+        }
+      }
+    }
+  }
+}
