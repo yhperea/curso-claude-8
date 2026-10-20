@@ -1,0 +1,105 @@
+<div class="page-header">
+  <h1>Mesas</h1>
+  <div class="status-summary">
+    @for (status of statuses; track status) {
+      <span [class]="getStatusClass(status)">{{ counts()[status] }} {{ status }}</span>
+    }
+  </div>
+</div>
+
+@if (tableStore.loading() && tableStore.tables().length === 0) {
+  <div class="spinner"></div>
+}
+
+@if (tableStore.error()) {
+  <div class="alert-error">{{ tableStore.error() }}</div>
+}
+
+@if (!tableStore.loading() || tableStore.tables().length > 0) {
+  @if (tableStore.tables().length === 0) {
+    <div class="empty-state">
+      <p>No hay mesas en este restaurante</p>
+    </div>
+  } @else {
+    <div class="tables-layout">
+      <div class="tables-grid">
+        @for (table of tableStore.tables(); track table.id) {
+          <div
+            [class]="'table-card status-' + table.status"
+            [class.selected]="tableStore.selectedTable()?.id === table.id"
+            (click)="select(table)">
+            <div class="table-card-header">
+              <span class="table-number">Mesa {{ table.number }}</span>
+              <span [class]="getStatusClass(table.status)">{{ table.status }}</span>
+            </div>
+            <div class="table-meta">
+              <span class="table-capacity">
+                <lucide-icon name="users" [size]="14"></lucide-icon>
+                {{ table.capacity }}
+              </span>
+              @if (table.occupiedAt) {
+                <span class="table-since">desde {{ table.occupiedAt | date:'HH:mm' }}</span>
+              }
+            </div>
+            @if (table.description) {
+              <p class="table-description">{{ table.description }}</p>
+            }
+            <div class="status-actions">
+              @for (status of statuses; track status) {
+                <button
+                  class="btn btn-sm status-btn"
+                  [class.active]="table.status === status"
+                  [disabled]="table.status === status"
+                  (click)="changeStatus(table, status, $event)">
+                  {{ status }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (tableStore.selectedTable(); as selected) {
+        <aside class="table-orders">
+          <div class="order-header">
+            <span class="order-id">Pedidos de la mesa {{ selected.number }}</span>
+            <span [class]="getStatusClass(selected.status)">{{ selected.status }}</span>
+          </div>
+          <div class="order-items">
+            @if (selected.status !== 'ocupada') {
+              <div class="empty-state">
+                <p>La mesa no está ocupada</p>
+              </div>
+            } @else if (tableStore.ordersLoading() && tableStore.selectedOrders().length === 0) {
+              <div class="spinner"></div>
+            } @else if (tableStore.selectedOrders().length === 0) {
+              <div class="empty-state">
+                <p>Esta mesa aún no tiene pedidos</p>
+              </div>
+            } @else {
+              @for (order of tableStore.selectedOrders(); track order.id) {
+                <div class="table-order">
+                  <div class="table-order-header">
+                    <span>Pedido #{{ order.id.substring(0, 8) }}</span>
+                    <span class="table-order-time">{{ order.createdAt | date:'HH:mm' }}</span>
+                  </div>
+                  @for (item of order.items; track item.id) {
+                    <div class="order-item">
+                      <div class="item-info">
+                        <span class="item-name">{{ item.dishName || 'Producto' }}</span>
+                        @if (item.notes) {
+                          <span class="item-notes">{{ item.notes }}</span>
+                        }
+                      </div>
+                      <span [class]="getStatusClass(item.status)">{{ item.status }}</span>
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </div>
+        </aside>
+      }
+    </div>
+  }
+}

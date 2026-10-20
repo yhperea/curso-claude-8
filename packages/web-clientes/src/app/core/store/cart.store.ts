@@ -1,4 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core'
+import { Table } from '../models/table.model'
 
 export interface Dish {
   id: string
@@ -11,19 +12,49 @@ export interface Dish {
   ingredients: { ingredientId: string; quantity: number }[]
 }
 
+export interface SelectedTable {
+  table: Table
+  people: number
+}
+
 export interface CartItem {
   dish: Dish
   quantity: number
   notes: string
 }
 
+const TABLE_STORAGE_KEY = 'resttek.selectedTable'
+
+function readStoredTable(): SelectedTable | null {
+  try {
+    const raw = sessionStorage.getItem(TABLE_STORAGE_KEY)
+    return raw ? (JSON.parse(raw) as SelectedTable) : null
+  } catch {
+    return null
+  }
+}
+
+function writeStoredTable(value: SelectedTable | null): void {
+  try {
+    if (value) {
+      sessionStorage.setItem(TABLE_STORAGE_KEY, JSON.stringify(value))
+    } else {
+      sessionStorage.removeItem(TABLE_STORAGE_KEY)
+    }
+  } catch {
+    // Sin storage disponible la mesa solo vive en memoria
+  }
+}
+
 @Injectable({ providedIn: 'root' })
 export class CartStore {
   private readonly _items = signal<CartItem[]>([])
   private readonly _restaurantId = signal<string | null>(null)
+  private readonly _selectedTable = signal<SelectedTable | null>(readStoredTable())
 
   readonly items = this._items.asReadonly()
   readonly restaurantId = this._restaurantId.asReadonly()
+  readonly selectedTable = this._selectedTable.asReadonly()
 
   readonly total = computed(() =>
     this._items().reduce((sum, item) => sum + item.dish.price * item.quantity, 0)
@@ -74,6 +105,24 @@ export class CartStore {
     this._items.set(items)
   }
 
+  hasTableFor(restaurantId: string): boolean {
+    return this._selectedTable()?.table.restaurantId === restaurantId
+  }
+
+  setTable(table: Table, people: number): void {
+    if (this._restaurantId() && this._restaurantId() !== table.restaurantId) {
+      this.clear()
+    }
+    this._selectedTable.set({ table, people })
+    writeStoredTable({ table, people })
+  }
+
+  clearTable(): void {
+    this._selectedTable.set(null)
+    writeStoredTable(null)
+  }
+
+  // Vacía los platos pero conserva la mesa: el cliente puede seguir pidiendo desde ella
   clear(): void {
     this._items.set([])
     this._restaurantId.set(null)

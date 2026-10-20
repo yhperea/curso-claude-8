@@ -32,6 +32,9 @@ import { Order, OrderItem } from '../../core/models/order.model'
               <lucide-icon name="utensils" [size]="24"></lucide-icon>
             }
             <span>{{ order()!.restaurantName || 'RestTek' }}</span>
+            @if (order()!.tableNumber) {
+              <span class="badge">Mesa {{ order()!.tableNumber }}</span>
+            }
           </div>
           
           <div class="ticket-divider"></div>

@@ -158,11 +158,37 @@ const seed = async () => {
 
         console.log('Restaurant 2 dishes created: 1 dish + 1 drink')
 
+        // Ids fijos para que el pedido de ejemplo pueda apuntar a la mesa 5 de rest-1.
+        const tables = [
+            { restaurantId: 'rest-1', number: 1, capacity: 2, description: 'Junto a la ventana', status: 'libre' },
+            { restaurantId: 'rest-1', number: 2, capacity: 2, description: null, status: 'libre' },
+            { restaurantId: 'rest-1', number: 3, capacity: 4, description: 'Terraza', status: 'libre' },
+            { restaurantId: 'rest-1', number: 4, capacity: 4, description: 'Terraza', status: 'reservada' },
+            { restaurantId: 'rest-1', number: 5, capacity: 6, description: 'Salón principal', status: 'ocupada' },
+            { restaurantId: 'rest-1', number: 6, capacity: 8, description: 'Reservado privado', status: 'libre' },
+            { restaurantId: 'rest-2', number: 1, capacity: 2, description: null, status: 'libre' },
+            { restaurantId: 'rest-2', number: 2, capacity: 4, description: 'Terraza', status: 'libre' },
+            { restaurantId: 'rest-2', number: 3, capacity: 4, description: null, status: 'ocupada' },
+            { restaurantId: 'rest-2', number: 4, capacity: 6, description: 'Salón', status: 'libre' },
+        ]
+
+        const tablesCreatedAt = new Date().toISOString()
+        const occupiedAt = new Date(Date.now() - 30 * 60 * 1000).toISOString()
+        for (const table of tables) {
+            await dbConfig.run(`
+                INSERT OR IGNORE INTO restaurant_tables (id, restaurant_id, number, description, capacity, status, occupied_at, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `, [`${table.restaurantId}-mesa-${table.number}`, table.restaurantId, table.number, table.description, table.capacity, table.status,
+                table.status === 'ocupada' ? occupiedAt : null, tablesCreatedAt, tablesCreatedAt])
+        }
+
+        console.log('Tables created: 6 in rest-1, 4 in rest-2')
+
         const order1Id = randomUUID()
         await dbConfig.run(`
             INSERT OR IGNORE INTO orders (id, restaurant_id, table_id, client_id, created_at)
             VALUES (?, ?, ?, ?, ?)
-        `, [order1Id, 'rest-1', '5', null, new Date().toISOString()])
+        `, [order1Id, 'rest-1', 'rest-1-mesa-5', null, new Date().toISOString()])
 
         for (let i = 0; i < 2; i++) {
             await dbConfig.run(`
