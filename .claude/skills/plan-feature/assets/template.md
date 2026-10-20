@@ -1,6 +1,7 @@
 # Plan: <título breve>
 
 - **Tipo:** feature | fix | refactor
+- **Issue:** #<número> — <URL de la issue>
 - **Fecha:** <AAAA-MM-DD>
 - **Estimación total:** <suma de las tareas> min
 
@@ -15,7 +16,7 @@
 
 ## Contexto técnico
 
-<Clases, puertos, adaptadores y endpoints afectados, con rutas relativas al repo. Para un fix, la causa raíz identificada.>
+<Paquetes afectados, estilo de arquitectura (hexagonal en `contexts/employee/` o por capas), ficheros, endpoints y pantallas afectados, con rutas relativas al repo. Para un fix, la causa raíz identificada.>
 
 ## Tareas
 
@@ -34,7 +35,7 @@
 - **Depende de:** T1
 - **Hecho cuando:** <comprobación>
 
-<!-- Añade tantas tareas como sean necesarias. La última debe ser la verificación con ./mvnw test. -->
+<!-- Añade tantas tareas como sean necesarias. La última debe ser la verificación con npm test (y el build de cada frontend tocado). -->
 
 ## Criterios de aceptación
 
@@ -45,9 +46,11 @@
 
 ### Técnicos
 
-- [ ] Se respeta la regla de dependencias `infrastructure` → `application` → `domain`; `domain`/`application` no importan tipos de Spring web, validación ni persistencia.
-- [ ] Los nuevos servicios y adaptadores se registran como beans en `infrastructure/config`.
-- [ ] Hay tests que cubren los criterios funcionales y `./mvnw test` pasa en verde.
+- [ ] Se respeta el estilo de arquitectura del módulo (hexagonal: `infrastructure` → `application` → `domain`; por capas: `routes` → `controllers` → `services` → `repositories` → `models`).
+- [ ] Si cambian endpoints: `src/docs/openapi.json` y su `contract.<grupo>.test.ts` actualizados, router registrado en `routeMounts` y `npm run docs:build` ejecutado.
+- [ ] Hay tests que cubren los criterios funcionales de la API y `npm test` pasa en verde.
+- [ ] `npm run build -w <paquete>` pasa para cada frontend modificado.
+- [ ] `CLAUDE.md` y `docs/` actualizados si cambia lo que describen.
 - [ ] No se añaden dependencias externas sin justificar.
 
 ## Riesgos y decisiones
