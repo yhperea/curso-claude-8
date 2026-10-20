@@ -3,6 +3,7 @@ import { loadOpenApiSpec } from '@docs/openapi.js'
 import { normalizeIngredientUnit } from '@models/ingredient.model.js'
 import { normalizeDishCategory } from '@models/dish.model.js'
 import { normalizeOrderStatus } from '@models/order.model.js'
+import { normalizeTableStatus } from '@models/table.model.js'
 import { Role } from '@employee/domain/value-objects/Role.js'
 
 // Los modelos no exportan sus listas de valores, pero las enumeran en el
@@ -24,6 +25,7 @@ describe('Enums del spec OpenAPI', () => {
         ['IngredientUnit', normalizeIngredientUnit],
         ['DishCategory', normalizeDishCategory],
         ['OrderStatus', normalizeOrderStatus],
+        ['TableStatus', normalizeTableStatus],
         ['Role', (value: string) => new Role(value)]
     ] as const)('%s coincide con el dominio', (schemaName, normalize) => {
         expect([...schemas[schemaName].enum].sort()).toEqual(domainValues(normalize))

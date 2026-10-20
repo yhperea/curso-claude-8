@@ -45,6 +45,12 @@ import { OrderService } from '../../core/services/order.service'
 
           <aside class="order-summary card">
             <h3>Resumen</h3>
+            @if (cartStore.selectedTable(); as current) {
+              <div class="summary-row">
+                <span>Mesa</span>
+                <span>{{ current.table.number }} ({{ current.people }} pers.)</span>
+              </div>
+            }
             <div class="summary-row">
               <span>Items ({{ cartStore.itemCount() }})</span>
               <span>{{ cartStore.total() | number:'1.2-2' }} €</span>
@@ -198,6 +204,12 @@ export class CartComponent {
     const restaurantId = this.cartStore.restaurantId()
     if (!restaurantId || this.cartStore.items().length === 0) return
 
+    if (!this.cartStore.hasTableFor(restaurantId)) {
+      this.router.navigate(['/restaurants', restaurantId, 'table'])
+      return
+    }
+    const tableId = this.cartStore.selectedTable()!.table.id
+
     this.loading.set(true)
     this.error.set(null)
 
@@ -207,14 +219,21 @@ export class CartComponent {
       notes: item.notes || null
     }))
 
-    this.orderService.createOrder(restaurantId, items).subscribe({
+    this.orderService.createOrder(restaurantId, tableId, items).subscribe({
       next: (order) => {
         this.cartStore.clear()
         this.router.navigate(['/orders', order.id])
       },
       error: (err) => {
-        this.error.set('Error al confirmar el pedido. Inténtalo de nuevo.')
         this.loading.set(false)
+        // La mesa se liberó (o borró) entre medias: hay que elegir otra
+        const tableError = err?.error?.error
+        if (tableError === 'Table is not occupied' || tableError === 'Table not found') {
+          this.cartStore.clearTable()
+          this.error.set('Tu mesa ya no está disponible. Elige una mesa de nuevo para enviar el pedido.')
+          return
+        }
+        this.error.set('Error al confirmar el pedido. Inténtalo de nuevo.')
       }
     })
   }

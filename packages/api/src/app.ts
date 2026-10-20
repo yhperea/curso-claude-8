@@ -10,6 +10,8 @@ import dishRoutes from '@routes/dish.routes.js'
 import publicRestaurantRoutes from '@routes/restaurant.public.routes.js'
 import publicDishRoutes from '@routes/dish.public.routes.js'
 import orderRoutes from '@routes/order.routes.js'
+import tableRoutes from '@routes/table.routes.js'
+import publicTableRoutes from '@routes/table.public.routes.js'
 import docsRoutes from '@routes/docs.routes.js'
 import { errorHandler } from '@shared/infrastructure/http/errorHandler.js'
 
@@ -21,9 +23,11 @@ export const routeMounts: { path: string; router: Router }[] = [
     { path: '/api/v1/employees', router: employeeRoutes },
     { path: '/api/v1/public/restaurants', router: publicRestaurantRoutes },
     { path: '/api/v1/public/restaurants/:restaurantId/dishes', router: publicDishRoutes },
+    { path: '/api/v1/public/restaurants/:restaurantId/tables', router: publicTableRoutes },
     { path: '/api/v1/restaurants', router: restaurantRoutes },
     { path: '/api/v1/restaurants/:restaurantId/ingredients', router: ingredientRoutes },
     { path: '/api/v1/restaurants/:restaurantId/dishes', router: dishRoutes },
+    { path: '/api/v1/restaurants/:restaurantId/tables', router: tableRoutes },
     { path: '/api/v1/restaurants/:restaurantId/employees', router: restaurantEmployeeRoutes }
 ]
 

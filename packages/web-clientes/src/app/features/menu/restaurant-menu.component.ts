@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core'
-import { ActivatedRoute, RouterLink } from '@angular/router'
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'
 import { DecimalPipe } from '@angular/common'
 import { LucideAngularModule } from 'lucide-angular'
 import { DishService } from '../../core/services/dish.service'
@@ -18,6 +18,13 @@ import { Restaurant } from '../../core/models/restaurant.model'
           <a routerLink="/restaurants" class="back-link">← Volver a restaurantes</a>
           <h1>{{ restaurant()?.name || 'Cargando...' }}</h1>
         </div>
+        @if (cartStore.selectedTable(); as current) {
+          <a [routerLink]="['/restaurants', current.table.restaurantId, 'table']" class="table-badge">
+            <lucide-icon name="armchair" [size]="16"></lucide-icon>
+            Mesa {{ current.table.number }} · {{ current.people }}
+            {{ current.people === 1 ? 'persona' : 'personas' }}
+          </a>
+        }
       </div>
 
       @if (loading()) {
@@ -94,13 +101,35 @@ import { Restaurant } from '../../core/models/restaurant.model'
       margin-bottom: 8px;
       display: inline-block;
     }
+    .table-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: var(--green-glow);
+      color: var(--green-light);
+      font-size: 13px;
+      font-weight: 500;
+    }
     .menu-layout {
       display: grid;
       grid-template-columns: 1fr 320px;
       gap: 24px;
     }
     @media (max-width: 900px) {
-      .menu-layout {
+      .table-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: var(--green-glow);
+      color: var(--green-light);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .menu-layout {
         grid-template-columns: 1fr;
       }
     }
@@ -209,6 +238,7 @@ import { Restaurant } from '../../core/models/restaurant.model'
 })
 export class RestaurantMenuComponent implements OnInit {
   private readonly route = inject(ActivatedRoute)
+  private readonly router = inject(Router)
   private readonly dishService = inject(DishService)
   private readonly restaurantService = inject(RestaurantService)
   readonly cartStore = inject(CartStore)
@@ -234,6 +264,10 @@ export class RestaurantMenuComponent implements OnInit {
 
   ngOnInit(): void {
     const restaurantId = this.route.snapshot.paramMap.get('id')!
+    if (!this.cartStore.hasTableFor(restaurantId)) {
+      this.router.navigate(['/restaurants', restaurantId, 'table'])
+      return
+    }
     this.loadData(restaurantId)
   }
 

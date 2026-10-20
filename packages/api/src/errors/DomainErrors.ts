@@ -162,3 +162,62 @@ export class OrderNotFoundError extends AppError {
   }
 }
 
+export class TableNotFoundError extends AppError {
+  constructor() {
+    super('Table not found')
+  }
+}
+
+export class InvalidTableNumberError extends AppError {
+  constructor() {
+    super('El número de mesa debe ser un entero positivo')
+  }
+}
+
+export class InvalidTableCapacityError extends AppError {
+  constructor() {
+    super('La capacidad de la mesa debe ser un entero positivo')
+  }
+}
+
+export class InvalidTableStatusError extends AppError {
+  constructor(message?: string) {
+    super(message ?? 'Invalid table status')
+  }
+}
+
+export class InvalidPeopleCountError extends AppError {
+  constructor() {
+    super('El número de personas debe ser un entero positivo')
+  }
+}
+
+export class TableNumberAlreadyExistsError extends AppError {
+  constructor() {
+    super('Ya existe una mesa con ese número en este restaurante')
+  }
+}
+
+export class TableNotAvailableError extends AppError {
+  constructor() {
+    super('La mesa ya no está libre')
+  }
+}
+
+export class TableCapacityExceededError extends AppError {
+  constructor() {
+    super('La mesa no tiene capacidad para ese número de personas')
+  }
+}
+
+export class TableOccupiedError extends AppError {
+  constructor() {
+    super('No se puede borrar una mesa ocupada')
+  }
+}
+
+export class TableNotOccupiedError extends AppError {
+  constructor() {
+    super('Table is not occupied')
+  }
+}

@@ -94,6 +94,8 @@ th { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
         <ul><li><a href="#op-listDishes" title="GET /api/v1/restaurants/{restaurantId}/dishes"><span class="method m-get">GET</span><span>Listar todos los platos de un restaurante</span></a></li><li><a href="#op-createDish" title="POST /api/v1/restaurants/{restaurantId}/dishes"><span class="method m-post">POST</span><span>Crear un plato</span></a></li><li><a href="#op-getDish" title="GET /api/v1/restaurants/{restaurantId}/dishes/{id}"><span class="method m-get">GET</span><span>Obtener un plato</span></a></li><li><a href="#op-updateDish" title="PUT /api/v1/restaurants/{restaurantId}/dishes/{id}"><span class="method m-put">PUT</span><span>Actualizar un plato</span></a></li><li><a href="#op-deleteDish" title="DELETE /api/v1/restaurants/{restaurantId}/dishes/{id}"><span class="method m-delete">DELETE</span><span>Borrar un plato</span></a></li><li><a href="#op-listPublicDishes" title="GET /api/v1/public/restaurants/{restaurantId}/dishes"><span class="method m-get">GET</span><span>Carta pública de un restaurante</span></a></li></ul>
         <h2><a href="#tag-pedidos">Pedidos</a></h2>
         <ul><li><a href="#op-createOrder" title="POST /api/v1/orders"><span class="method m-post">POST</span><span>Crear un pedido</span></a></li><li><a href="#op-listActiveOrders" title="GET /api/v1/orders/active"><span class="method m-get">GET</span><span>Listar los pedidos activos de un restaurante</span></a></li><li><a href="#op-listMyOrders" title="GET /api/v1/orders/mine"><span class="method m-get">GET</span><span>Listar mis pedidos</span></a></li><li><a href="#op-getOrder" title="GET /api/v1/orders/{id}"><span class="method m-get">GET</span><span>Obtener un pedido</span></a></li><li><a href="#op-updateOrderItemStatus" title="PATCH /api/v1/orders/{orderId}/items/{itemId}/status"><span class="method m-patch">PATCH</span><span>Cambiar el estado de un ítem de un pedido</span></a></li></ul>
+        <h2><a href="#tag-mesas">Mesas</a></h2>
+        <ul><li><a href="#op-listTables" title="GET /api/v1/restaurants/{restaurantId}/tables"><span class="method m-get">GET</span><span>Listar las mesas de un restaurante</span></a></li><li><a href="#op-createTable" title="POST /api/v1/restaurants/{restaurantId}/tables"><span class="method m-post">POST</span><span>Crear una mesa</span></a></li><li><a href="#op-getTable" title="GET /api/v1/restaurants/{restaurantId}/tables/{id}"><span class="method m-get">GET</span><span>Obtener una mesa</span></a></li><li><a href="#op-updateTable" title="PUT /api/v1/restaurants/{restaurantId}/tables/{id}"><span class="method m-put">PUT</span><span>Actualizar una mesa</span></a></li><li><a href="#op-deleteTable" title="DELETE /api/v1/restaurants/{restaurantId}/tables/{id}"><span class="method m-delete">DELETE</span><span>Borrar una mesa</span></a></li><li><a href="#op-updateTableStatus" title="PATCH /api/v1/restaurants/{restaurantId}/tables/{id}/status"><span class="method m-patch">PATCH</span><span>Cambiar el estado de una mesa</span></a></li><li><a href="#op-occupyTable" title="POST /api/v1/restaurants/{restaurantId}/tables/{id}/occupy"><span class="method m-post">POST</span><span>Ocupar una mesa (cliente)</span></a></li><li><a href="#op-listTableOrders" title="GET /api/v1/restaurants/{restaurantId}/tables/{id}/orders"><span class="method m-get">GET</span><span>Pedidos de la ocupación actual de una mesa</span></a></li><li><a href="#op-listAvailableTables" title="GET /api/v1/public/restaurants/{restaurantId}/tables"><span class="method m-get">GET</span><span>Mesas disponibles para N personas</span></a></li></ul>
     <h2><a href="#schemas">Esquemas</a></h2>
   </nav>
   <main>
@@ -107,6 +109,7 @@ th { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
 <h3>Errores</h3>
 <p>Conviven dos formatos:</p>
 <ul><li><code>ErrorResponse</code> (<code>{ error, message }</code>): errores de dominio gestionados por el <code>errorHandler</code>. <code>error</code> es el nombre de la clase de error (p. ej. <code>RestaurantNotFoundError</code>).</li><li><code>SimpleError</code> (<code>{ error }</code>): errores de autenticación (401), autorización (403) y todos los de <code>/api/v1/orders</code>.</li></ul>
+<p>Los errores de dominio responden 400, salvo los <code>*NotFoundError</code> (404), <code>InvalidCredentialsError</code> (401) y los conflictos de mesas (<code>TableNumberAlreadyExistsError</code>, <code>TableNotAvailableError</code>, <code>TableOccupiedError</code>), que responden 409.</p>
 <h3>Datos de prueba</h3>
 <p>Tras <code>npm run seed</code>, la contraseña de cada usuario es su propio email: <code>admin@resttek.com</code>, <code>gerente1@resttek.com</code>, <code>cocinero1@resttek.com</code>, <code>camarero1@resttek.com</code>, <code>cliente1@resttek.com</code>.</p></div>
     
@@ -1225,7 +1228,8 @@ th { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
         </header>
         <p class="summary">Crear un pedido</p>
         <div class="desc"><p>Roles: <strong>autenticado</strong>. El <code>clientId</code> se toma del token. Cada ítem con <code>quantity: N</code> se expande en N ítems con <code>quantity: 1</code> y estado <code>pendiente</code>, para seguir el estado de cada unidad por separado.</p>
-<p>Cualquier error (incluido un <code>restaurantId</code> vacío o inexistente) se devuelve como 400 <code>SimpleError</code>.</p></div>
+<p>Cualquier error (incluido un <code>restaurantId</code> vacío o inexistente) se devuelve como 400 <code>SimpleError</code>.</p>
+<p>Si se envía <code>tableId</code> (no nulo), debe ser una mesa del mismo <code>restaurantId</code> en estado <code>ocupada</code>: si no existe responde 400 <code>{ &quot;error&quot;: &quot;Table not found&quot; }</code> y si no está ocupada, 400 <code>{ &quot;error&quot;: &quot;Table is not occupied&quot; }</code>. La respuesta incluye <code>tableNumber</code>.</p></div>
         
         <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-orderinput">OrderInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
             <tr>
@@ -1236,7 +1240,7 @@ th { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
             <tr>
               <td><code>tableId</code></td>
               <td>string | null</td>
-              <td>default: <code>null</code></td>
+              <td><code>id</code> de una mesa <code>ocupada</code> del mismo restaurante, o <code>null</code><br>default: <code>null</code></td>
             </tr>
             <tr>
               <td><code>items</code> <span class="req">obligatorio</span></td>
@@ -1430,6 +1434,481 @@ th { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
               <td><span class="status s5">500</span></td>
               <td>Error no controlado (<code>{ &quot;error&quot;: &quot;Internal Server Error&quot; }</code>)</td>
               <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      </section>
+      <section id="tag-mesas">
+        <h2>Mesas</h2>
+        <p class="muted">Mesas de un restaurante y su estado</p>
+        
+      <article class="op" id="op-listTables">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/tables</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Listar las mesas de un restaurante</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>, <code>camarero</code>, <code>cocinero</code>. Ordenadas por <code>number</code> ascendente.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>status</code></td>
+              <td>query</td>
+              <td><a href="#schema-tablestatus">TableStatus</a></td>
+              <td>Filtra por estado<br>uno de: <code>libre</code>, <code>ocupada</code>, <code>reservada</code></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Mesas del restaurante</td>
+              <td><a href="#schema-table">Table</a>[]</td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Datos inválidos (error de dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-createTable">
+        <header>
+          <span class="method m-post">POST</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/tables</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Crear una mesa</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>. Si no se envía <code>status</code>, la mesa se crea <code>libre</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-tableinput">TableInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>number</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>minimum: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>description</code></td>
+              <td>string | null</td>
+              <td>Se aplica <code>trim()</code>; una cadena vacía o con solo espacios se guarda como <code>null</code><br>default: <code>null</code></td>
+            </tr>
+            <tr>
+              <td><code>capacity</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>minimum: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>status</code></td>
+              <td><a href="#schema-tablestatus">TableStatus</a></td>
+              <td>Por defecto <code>libre</code> al crear; al actualizar, si se omite se conserva el actual</td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">201</span></td>
+              <td>Mesa creada</td>
+              <td><a href="#schema-table">Table</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Datos inválidos (error de dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">409</span></td>
+              <td>Conflicto con el estado actual del recurso</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s5">500</span></td>
+              <td>Error no controlado (p. ej. faltan campos obligatorios que no valida el dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-getTable">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/tables/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Obtener una mesa</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>, <code>camarero</code>, <code>cocinero</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Mesa</td>
+              <td><a href="#schema-table">Table</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-updateTable">
+        <header>
+          <span class="method m-put">PUT</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/tables/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Actualizar una mesa</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>. Reemplaza <code>number</code>, <code>description</code> y <code>capacity</code>. Si no se envía <code>status</code>, conserva el actual.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-tableinput">TableInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>number</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>minimum: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>description</code></td>
+              <td>string | null</td>
+              <td>Se aplica <code>trim()</code>; una cadena vacía o con solo espacios se guarda como <code>null</code><br>default: <code>null</code></td>
+            </tr>
+            <tr>
+              <td><code>capacity</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>minimum: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>status</code></td>
+              <td><a href="#schema-tablestatus">TableStatus</a></td>
+              <td>Por defecto <code>libre</code> al crear; al actualizar, si se omite se conserva el actual</td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Mesa actualizada</td>
+              <td><a href="#schema-table">Table</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Datos inválidos (error de dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">409</span></td>
+              <td>Conflicto con el estado actual del recurso</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-deleteTable">
+        <header>
+          <span class="method m-delete">DELETE</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/tables/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Borrar una mesa</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>. No se puede borrar una mesa <code>ocupada</code> (409). Los pedidos antiguos conservan su <code>tableId</code> y pasan a devolver <code>tableNumber: null</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">204</span></td>
+              <td>Mesa borrada</td>
+              <td><span class="muted">sin cuerpo</span></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">409</span></td>
+              <td>Conflicto con el estado actual del recurso</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-updateTableStatus">
+        <header>
+          <span class="method m-patch">PATCH</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/tables/{id}/status</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Cambiar el estado de una mesa</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>, <code>camarero</code>, <code>cocinero</code>. Cualquier transición está permitida. Pasar a <code>ocupada</code> fija <code>occupiedAt</code> (si ya lo estaba, no cambia); salir de <code>ocupada</code> lo pone a <code>null</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-tablestatusinput">TableStatusInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>status</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-tablestatus">TableStatus</a></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Mesa con el nuevo estado</td>
+              <td><a href="#schema-table">Table</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Estado inválido o ausente (<code>InvalidTableStatusError</code>)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-occupyTable">
+        <header>
+          <span class="method m-post">POST</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/tables/{id}/occupy</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Ocupar una mesa (cliente)</p>
+        <div class="desc"><p>Roles: <code>cliente</code>. El cliente pulsa *continuar* tras elegir mesa. La ocupación es atómica (<code>UPDATE ... WHERE status = 'libre'</code>). La mesa debe estar <code>libre</code> y tener <code>capacity &gt;= people</code>; pasa a <code>ocupada</code> con <code>occupiedAt</code> = ahora. Si otro cliente la ocupó antes, responde 409 y el front debe volver a pedir las mesas disponibles.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-occupytableinput">OccupyTableInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>people</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>Nº de comensales; debe ser &lt;= <code>capacity</code><br>minimum: <code>1</code></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Mesa ocupada</td>
+              <td><a href="#schema-table">Table</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td><code>people</code> ausente, no entero o &lt; 1 (<code>InvalidPeopleCountError</code>), o mayor que <code>capacity</code> (<code>TableCapacityExceededError</code>)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">409</span></td>
+              <td>La mesa no está <code>libre</code> (<code>TableNotAvailableError</code>)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-listTableOrders">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/tables/{id}/orders</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Pedidos de la ocupación actual de una mesa</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>, <code>camarero</code>, <code>cocinero</code>. Si la mesa está <code>ocupada</code>, devuelve sus pedidos creados desde <code>occupiedAt</code> (incluidos los ya entregados), del más antiguo al más reciente, con los datos del plato en cada ítem. Si no está <code>ocupada</code>, devuelve <code>[]</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Pedidos de la mesa</td>
+              <td><a href="#schema-order">Order</a>[]</td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-listAvailableTables">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/public/restaurants/{restaurantId}/tables</code>
+          <span class="auth public">Público</span>
+        </header>
+        <p class="summary">Mesas disponibles para N personas</p>
+        <div class="desc"><p>Público. Devuelve las mesas <code>libre</code> con <code>capacity &gt;= people</code>, ordenadas por <code>capacity</code> y luego <code>number</code> ascendentes (la más ajustada primero). Un restaurante inexistente devuelve <code>[]</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>people</code> <span class="req">obligatorio</span></td>
+              <td>query</td>
+              <td>integer</td>
+              <td>Número de comensales<br>minimum: <code>1</code></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Mesas disponibles</td>
+              <td><a href="#schema-table">Table</a>[]</td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td><code>people</code> ausente, no entero o &lt; 1 (<code>InvalidPeopleCountError</code>)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
             </tr></tbody></table></div>
       </article>
       </section>
@@ -1924,6 +2403,11 @@ th { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
               <td></td>
             </tr>
             <tr>
+              <td><code>tableNumber</code> <span class="req">obligatorio</span></td>
+              <td>integer | null</td>
+              <td><code>number</code> de la mesa en el momento de la lectura; <code>null</code> si el pedido no tiene mesa o la mesa se borró</td>
+            </tr>
+            <tr>
               <td><code>clientId</code> <span class="req">obligatorio</span></td>
               <td>string | null</td>
               <td><code>id</code> del usuario que creó el pedido</td>
@@ -1963,7 +2447,7 @@ th { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
             <tr>
               <td><code>tableId</code></td>
               <td>string | null</td>
-              <td>default: <code>null</code></td>
+              <td><code>id</code> de una mesa <code>ocupada</code> del mismo restaurante, o <code>null</code><br>default: <code>null</code></td>
             </tr>
             <tr>
               <td><code>items</code> <span class="req">obligatorio</span></td>
@@ -2001,6 +2485,116 @@ th { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
               <td><code>employee</code> <span class="req">obligatorio</span></td>
               <td><a href="#schema-employee">Employee</a></td>
               <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-tablestatus">
+        <h3>TableStatus</h3>
+        <p>Se normaliza a minúsculas sin espacios</p>
+        <p>Enum (<code>string</code>): <code>libre</code>, <code>ocupada</code>, <code>reservada</code></p>
+        
+        
+      </article>
+      <article class="schema" id="schema-table">
+        <h3>Table</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>UUID en las mesas creadas por la API; las del seed usan ids legibles (<code>rest-1-mesa-5</code>)</td>
+            </tr>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>number</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>Número visible de la mesa, único en el restaurante<br>minimum: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>description</code> <span class="req">obligatorio</span></td>
+              <td>string | null</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>capacity</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>Nº máximo de comensales<br>minimum: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>status</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-tablestatus">TableStatus</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>occupiedAt</code> <span class="req">obligatorio</span></td>
+              <td>string | null <span class="muted">(date-time)</span></td>
+              <td>Inicio de la ocupación actual; <code>null</code> si no está <code>ocupada</code></td>
+            </tr>
+            <tr>
+              <td><code>createdAt</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(date-time)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>updatedAt</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(date-time)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-tableinput">
+        <h3>TableInput</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>number</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>minimum: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>description</code></td>
+              <td>string | null</td>
+              <td>Se aplica <code>trim()</code>; una cadena vacía o con solo espacios se guarda como <code>null</code><br>default: <code>null</code></td>
+            </tr>
+            <tr>
+              <td><code>capacity</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>minimum: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>status</code></td>
+              <td><a href="#schema-tablestatus">TableStatus</a></td>
+              <td>Por defecto <code>libre</code> al crear; al actualizar, si se omite se conserva el actual</td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-tablestatusinput">
+        <h3>TableStatusInput</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>status</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-tablestatus">TableStatus</a></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-occupytableinput">
+        <h3>OccupyTableInput</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>people</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>Nº de comensales; debe ser &lt;= <code>capacity</code><br>minimum: <code>1</code></td>
             </tr></tbody></table></div>
         
       </article>
