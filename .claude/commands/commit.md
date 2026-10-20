@@ -37,7 +37,7 @@ Crea un único commit con un mensaje que siga la especificación **Conventional 
    ```
 
    - **Tipos**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
-   - **Scope** (opcional): la zona afectada, p. ej. `auth`, `health`, `domain`, `persistence`, `config`.
+   - **Scope** (opcional): la zona afectada. Usa el paquete del monorepo (`api`, `web-admin`, `web-empleados`, `web-clientes`, `web-shared`) o, fuera de los paquetes, `docs`, `plans`, `skills`, `ci`. Si el cambio toca varios paquetes, omite el scope o usa el principal.
    - **Descripción**: en imperativo, minúscula inicial, sin punto final, máximo ~72 caracteres.
    - **Cuerpo**: solo si aporta el *porqué* del cambio.
    - **Breaking change**: añade `!` tras el tipo/scope y un footer `BREAKING CHANGE: <explicación>`.
