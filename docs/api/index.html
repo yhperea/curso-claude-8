@@ -1,0 +1,2040 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resttek API</title>
+<!-- Generado desde packages/api/src/docs/openapi.json con `npm run docs:build`. No editar a mano. -->
+<style>
+:root {
+  --bg: #f7f7f8; --surface: #ffffff; --text: #1d1d21; --muted: #6b6b76; --border: #e2e2e7;
+  --code-bg: #f0f0f3; --accent: #3a5bd9;
+  --get: #1f7a4d; --post: #2a5bd7; --put: #a15c00; --patch: #7a3fc4; --delete: #c0362c;
+  --s2: #1f7a4d; --s4: #a15c00; --s5: #c0362c;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111114; --surface: #1a1a1f; --text: #e8e8ec; --muted: #9a9aa6; --border: #2c2c34;
+    --code-bg: #24242b; --accent: #8aa4ff;
+    --get: #4fc58b; --post: #7ea2ff; --put: #f0a849; --patch: #b98cf5; --delete: #f2786c;
+    --s2: #4fc58b; --s4: #f0a849; --s5: #f2786c;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111114; --surface: #1a1a1f; --text: #e8e8ec; --muted: #9a9aa6; --border: #2c2c34;
+  --code-bg: #24242b; --accent: #8aa4ff;
+  --get: #4fc58b; --post: #7ea2ff; --put: #f0a849; --patch: #b98cf5; --delete: #f2786c;
+  --s2: #4fc58b; --s4: #f0a849; --s5: #f2786c;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, pre { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 0.88em; }
+code { background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 4px; }
+pre { background: var(--code-bg); padding: 12px; border-radius: 6px; overflow-x: auto; }
+.layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); max-width: 1280px; margin: 0 auto; }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 24px 16px; border-right: 1px solid var(--border); }
+nav h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 20px 0 6px; }
+nav ul { list-style: none; margin: 0; padding: 0; }
+nav li a { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; color: var(--text); font-size: 0.85rem; min-width: 0; }
+nav li a span:last-child { overflow-wrap: anywhere; }
+nav li a .method { font-size: 0.62rem; min-width: 52px; }
+main { padding: 32px 40px 80px; min-width: 0; }
+h1 { margin: 0 0 4px; font-size: 1.9rem; }
+.version { color: var(--muted); margin: 0 0 24px; }
+section > h2 { margin: 48px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.op, .schema { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; margin: 16px 0; }
+.op header { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.path { background: none; padding: 0; font-size: 0.98rem; font-weight: 600; word-break: break-all; }
+.method { display: inline-block; font: 700 0.72rem/1 ui-monospace, Menlo, monospace; padding: 5px 7px; border-radius: 4px; color: #fff; text-align: center; }
+.m-get { background: var(--get); } .m-post { background: var(--post); } .m-put { background: var(--put); }
+.m-patch { background: var(--patch); } .m-delete { background: var(--delete); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .method { color: #111114; } }
+:root[data-theme="dark"] .method { color: #111114; }
+.auth { margin-left: auto; font-size: 0.75rem; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+.auth.locked { color: var(--put); border-color: currentColor; }
+.summary { font-weight: 600; margin: 12px 0 4px; }
+.desc p { margin: 4px 0; color: var(--muted); }
+h4 { margin: 18px 0 6px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
+.req { font-size: 0.7rem; color: var(--delete); margin-left: 4px; }
+.muted { color: var(--muted); }
+.status { font: 700 0.8rem ui-monospace, Menlo, monospace; }
+.s2 { color: var(--s2); } .s4 { color: var(--s4); } .s5 { color: var(--s5); }
+.schema-type { margin: 4px 0; }
+.nested { margin-top: 6px; padding-left: 8px; border-left: 2px solid var(--border); }
+.intro h3 { margin: 24px 0 6px; }
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  nav { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+  main { padding: 24px 16px 60px; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav>
+    <strong>Resttek API</strong>
+    
+        <h2><a href="#tag-health">Health</a></h2>
+        <ul><li><a href="#op-getHealth" title="GET /health"><span class="method m-get">GET</span><span>Healthcheck</span></a></li></ul>
+        <h2><a href="#tag-auth">Auth</a></h2>
+        <ul><li><a href="#op-login" title="POST /api/v1/auth/login"><span class="method m-post">POST</span><span>Iniciar sesión</span></a></li><li><a href="#op-registerClient" title="POST /api/v1/auth/register"><span class="method m-post">POST</span><span>Registrar un cliente</span></a></li></ul>
+        <h2><a href="#tag-restaurantes">Restaurantes</a></h2>
+        <ul><li><a href="#op-listRestaurants" title="GET /api/v1/restaurants"><span class="method m-get">GET</span><span>Listar restaurantes visibles para el usuario</span></a></li><li><a href="#op-createRestaurant" title="POST /api/v1/restaurants"><span class="method m-post">POST</span><span>Crear un restaurante</span></a></li><li><a href="#op-getRestaurant" title="GET /api/v1/restaurants/{id}"><span class="method m-get">GET</span><span>Obtener un restaurante</span></a></li><li><a href="#op-updateRestaurant" title="PUT /api/v1/restaurants/{id}"><span class="method m-put">PUT</span><span>Actualizar un restaurante</span></a></li><li><a href="#op-listPublicRestaurants" title="GET /api/v1/public/restaurants"><span class="method m-get">GET</span><span>Listar todos los restaurantes (público)</span></a></li><li><a href="#op-getPublicRestaurant" title="GET /api/v1/public/restaurants/{id}"><span class="method m-get">GET</span><span>Obtener un restaurante (público)</span></a></li></ul>
+        <h2><a href="#tag-empleados">Empleados</a></h2>
+        <ul><li><a href="#op-listEmployees" title="GET /api/v1/employees"><span class="method m-get">GET</span><span>Listar empleados</span></a></li><li><a href="#op-createEmployee" title="POST /api/v1/employees"><span class="method m-post">POST</span><span>Crear un empleado</span></a></li><li><a href="#op-getEmployee" title="GET /api/v1/employees/{id}"><span class="method m-get">GET</span><span>Obtener un empleado</span></a></li><li><a href="#op-listRestaurantEmployees" title="GET /api/v1/restaurants/{restaurantId}/employees"><span class="method m-get">GET</span><span>Listar los empleados de un restaurante</span></a></li></ul>
+        <h2><a href="#tag-ingredientes">Ingredientes</a></h2>
+        <ul><li><a href="#op-listIngredients" title="GET /api/v1/restaurants/{restaurantId}/ingredients"><span class="method m-get">GET</span><span>Listar los ingredientes de un restaurante</span></a></li><li><a href="#op-createIngredient" title="POST /api/v1/restaurants/{restaurantId}/ingredients"><span class="method m-post">POST</span><span>Crear un ingrediente</span></a></li><li><a href="#op-getIngredient" title="GET /api/v1/restaurants/{restaurantId}/ingredients/{id}"><span class="method m-get">GET</span><span>Obtener un ingrediente</span></a></li><li><a href="#op-updateIngredient" title="PUT /api/v1/restaurants/{restaurantId}/ingredients/{id}"><span class="method m-put">PUT</span><span>Actualizar un ingrediente</span></a></li><li><a href="#op-deleteIngredient" title="DELETE /api/v1/restaurants/{restaurantId}/ingredients/{id}"><span class="method m-delete">DELETE</span><span>Borrar un ingrediente</span></a></li></ul>
+        <h2><a href="#tag-platos">Platos</a></h2>
+        <ul><li><a href="#op-listDishes" title="GET /api/v1/restaurants/{restaurantId}/dishes"><span class="method m-get">GET</span><span>Listar todos los platos de un restaurante</span></a></li><li><a href="#op-createDish" title="POST /api/v1/restaurants/{restaurantId}/dishes"><span class="method m-post">POST</span><span>Crear un plato</span></a></li><li><a href="#op-getDish" title="GET /api/v1/restaurants/{restaurantId}/dishes/{id}"><span class="method m-get">GET</span><span>Obtener un plato</span></a></li><li><a href="#op-updateDish" title="PUT /api/v1/restaurants/{restaurantId}/dishes/{id}"><span class="method m-put">PUT</span><span>Actualizar un plato</span></a></li><li><a href="#op-deleteDish" title="DELETE /api/v1/restaurants/{restaurantId}/dishes/{id}"><span class="method m-delete">DELETE</span><span>Borrar un plato</span></a></li><li><a href="#op-listPublicDishes" title="GET /api/v1/public/restaurants/{restaurantId}/dishes"><span class="method m-get">GET</span><span>Carta pública de un restaurante</span></a></li></ul>
+        <h2><a href="#tag-pedidos">Pedidos</a></h2>
+        <ul><li><a href="#op-createOrder" title="POST /api/v1/orders"><span class="method m-post">POST</span><span>Crear un pedido</span></a></li><li><a href="#op-listActiveOrders" title="GET /api/v1/orders/active"><span class="method m-get">GET</span><span>Listar los pedidos activos de un restaurante</span></a></li><li><a href="#op-listMyOrders" title="GET /api/v1/orders/mine"><span class="method m-get">GET</span><span>Listar mis pedidos</span></a></li><li><a href="#op-getOrder" title="GET /api/v1/orders/{id}"><span class="method m-get">GET</span><span>Obtener un pedido</span></a></li><li><a href="#op-updateOrderItemStatus" title="PATCH /api/v1/orders/{orderId}/items/{itemId}/status"><span class="method m-patch">PATCH</span><span>Cambiar el estado de un ítem de un pedido</span></a></li></ul>
+    <h2><a href="#schemas">Esquemas</a></h2>
+  </nav>
+  <main>
+    <h1>Resttek API</h1>
+    <p class="version">Versión 1.0.0 · OpenAPI 3.1.0 · Servidor: <code>http://localhost:3000</code></p>
+    <div class="intro"><p>API REST de Resttek, plataforma de gestión de restaurantes.</p>
+<h3>Autenticación</h3>
+<p>Los endpoints protegidos exigen la cabecera <code>Authorization: Bearer &lt;token&gt;</code>. El token (JWT con <code>id</code>, <code>role</code> y <code>restaurantId</code>) se obtiene con <code>POST /api/v1/auth/login</code> o <code>POST /api/v1/auth/register</code>.</p>
+<h3>Roles</h3>
+<p><code>admin</code>, <code>manager</code> (gerente), <code>camarero</code>, <code>cocinero</code> y <code>cliente</code>. Cada operación indica en su descripción qué roles admite. Si solo dice <strong>autenticado</strong>, basta con un token válido de cualquier rol.</p>
+<h3>Errores</h3>
+<p>Conviven dos formatos:</p>
+<ul><li><code>ErrorResponse</code> (<code>{ error, message }</code>): errores de dominio gestionados por el <code>errorHandler</code>. <code>error</code> es el nombre de la clase de error (p. ej. <code>RestaurantNotFoundError</code>).</li><li><code>SimpleError</code> (<code>{ error }</code>): errores de autenticación (401), autorización (403) y todos los de <code>/api/v1/orders</code>.</li></ul>
+<h3>Datos de prueba</h3>
+<p>Tras <code>npm run seed</code>, la contraseña de cada usuario es su propio email: <code>admin@resttek.com</code>, <code>gerente1@resttek.com</code>, <code>cocinero1@resttek.com</code>, <code>camarero1@resttek.com</code>, <code>cliente1@resttek.com</code>.</p></div>
+    
+      <section id="tag-health">
+        <h2>Health</h2>
+        <p class="muted">Estado del servicio</p>
+        
+      <article class="op" id="op-getHealth">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/health</code>
+          <span class="auth public">Público</span>
+        </header>
+        <p class="summary">Healthcheck</p>
+        <div class="desc"><p>Público. No lleva el prefijo <code>/api/v1</code>.</p></div>
+        
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>El servicio está levantado</td>
+              <td>object</td>
+            </tr></tbody></table></div>
+      </article>
+      </section>
+      <section id="tag-auth">
+        <h2>Auth</h2>
+        <p class="muted">Login y registro de clientes</p>
+        
+      <article class="op" id="op-login">
+        <header>
+          <span class="method m-post">POST</span>
+          <code class="path">/api/v1/auth/login</code>
+          <span class="auth public">Público</span>
+        </header>
+        <p class="summary">Iniciar sesión</p>
+        <div class="desc"><p>Público. Válido para empleados y clientes. Devuelve el JWT que hay que enviar como <code>Bearer</code> en el resto de endpoints.</p></div>
+        
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-loginrequest">LoginRequest</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>email</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(email)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>password</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Credenciales correctas</td>
+              <td><a href="#schema-authresponse">AuthResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Email inexistente o contraseña incorrecta (<code>InvalidCredentialsError</code>)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-registerClient">
+        <header>
+          <span class="method m-post">POST</span>
+          <code class="path">/api/v1/auth/register</code>
+          <span class="auth public">Público</span>
+        </header>
+        <p class="summary">Registrar un cliente</p>
+        <div class="desc"><p>Público. Crea un usuario con rol <code>cliente</code> y sin restaurante, y devuelve su token.</p></div>
+        
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-registerrequest">RegisterRequest</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>firstName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>lastName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>email</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(email)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>password</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">201</span></td>
+              <td>Cliente registrado</td>
+              <td><a href="#schema-authresponse">AuthResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Email ya en uso (<code>DuplicatedEmailError</code>), email con formato inválido (<code>InvalidEmailError</code>) o nombre/apellido vacíos</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s5">500</span></td>
+              <td>Error no controlado (p. ej. faltan campos obligatorios que no valida el dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      </section>
+      <section id="tag-restaurantes">
+        <h2>Restaurantes</h2>
+        <p class="muted">Gestión y consulta pública de restaurantes</p>
+        
+      <article class="op" id="op-listRestaurants">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/restaurants</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Listar restaurantes visibles para el usuario</p>
+        <div class="desc"><p>Roles: <strong>autenticado</strong>. Con rol <code>admin</code> devuelve todos los restaurantes. Con cualquier otro rol devuelve un array con el restaurante del token (<code>restaurantId</code>), o un array vacío si el usuario no tiene restaurante asignado.</p></div>
+        
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Restaurantes visibles</td>
+              <td><a href="#schema-restaurant">Restaurant</a>[]</td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-createRestaurant">
+        <header>
+          <span class="method m-post">POST</span>
+          <code class="path">/api/v1/restaurants</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Crear un restaurante</p>
+        <div class="desc"><p>Roles: <code>admin</code>.</p></div>
+        
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-restaurantinput">RestaurantInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>address</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>email</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(email)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>phone</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>pattern: <code>&quot;^\\+?[\\d\\s\\-()]{7,20}$&quot;</code></td>
+            </tr>
+            <tr>
+              <td><code>ownerFirstName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>ownerLastName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>logoUrl</code></td>
+              <td>string | null</td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">201</span></td>
+              <td>Restaurante creado</td>
+              <td><a href="#schema-restaurant">Restaurant</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Datos inválidos (error de dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-getRestaurant">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/restaurants/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Obtener un restaurante</p>
+        <div class="desc"><p>Roles: <strong>autenticado</strong>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Restaurante</td>
+              <td><a href="#schema-restaurant">Restaurant</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-updateRestaurant">
+        <header>
+          <span class="method m-put">PUT</span>
+          <code class="path">/api/v1/restaurants/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Actualizar un restaurante</p>
+        <div class="desc"><p>Roles: <code>admin</code>. Reemplaza todos los campos; <code>logoUrl</code> pasa a <code>null</code> si no se envía.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-restaurantinput">RestaurantInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>address</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>email</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(email)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>phone</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>pattern: <code>&quot;^\\+?[\\d\\s\\-()]{7,20}$&quot;</code></td>
+            </tr>
+            <tr>
+              <td><code>ownerFirstName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>ownerLastName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>logoUrl</code></td>
+              <td>string | null</td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Restaurante actualizado</td>
+              <td><a href="#schema-restaurant">Restaurant</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Datos inválidos (error de dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-listPublicRestaurants">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/public/restaurants</code>
+          <span class="auth public">Público</span>
+        </header>
+        <p class="summary">Listar todos los restaurantes (público)</p>
+        <div class="desc"><p>Público. Usado por la app de clientes.</p></div>
+        
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Todos los restaurantes</td>
+              <td><a href="#schema-restaurant">Restaurant</a>[]</td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-getPublicRestaurant">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/public/restaurants/{id}</code>
+          <span class="auth public">Público</span>
+        </header>
+        <p class="summary">Obtener un restaurante (público)</p>
+        <div class="desc"><p>Público.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Restaurante</td>
+              <td><a href="#schema-restaurant">Restaurant</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      </section>
+      <section id="tag-empleados">
+        <h2>Empleados</h2>
+        <p class="muted">Gestión de empleados (solo admin)</p>
+        
+      <article class="op" id="op-listEmployees">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/employees</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Listar empleados</p>
+        <div class="desc"><p>Roles: <code>admin</code>. Paginado con <code>limit</code>/<code>offset</code> y filtrable por <code>role</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>limit</code></td>
+              <td>query</td>
+              <td>integer</td>
+              <td>minimum: <code>1</code><br>default: <code>10</code></td>
+            </tr>
+            <tr>
+              <td><code>offset</code></td>
+              <td>query</td>
+              <td>integer</td>
+              <td>minimum: <code>0</code><br>default: <code>0</code></td>
+            </tr>
+            <tr>
+              <td><code>role</code></td>
+              <td>query</td>
+              <td><a href="#schema-role">Role</a></td>
+              <td>uno de: <code>admin</code>, <code>manager</code>, <code>camarero</code>, <code>cocinero</code>, <code>cliente</code></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Página de empleados</td>
+              <td><a href="#schema-employee">Employee</a>[]</td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-createEmployee">
+        <header>
+          <span class="method m-post">POST</span>
+          <code class="path">/api/v1/employees</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Crear un empleado</p>
+        <div class="desc"><p>Roles: <code>admin</code>.</p></div>
+        
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-employeeinput">EmployeeInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>firstName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>lastName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>email</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(email)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>password</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>role</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-role">Role</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>restaurantId</code></td>
+              <td>string | null <span class="muted">(uuid)</span></td>
+              <td>Debe existir si se indica</td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">201</span></td>
+              <td>Empleado creado</td>
+              <td><a href="#schema-employee">Employee</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Datos inválidos (error de dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s5">500</span></td>
+              <td>Error no controlado (p. ej. faltan campos obligatorios que no valida el dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-getEmployee">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/employees/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Obtener un empleado</p>
+        <div class="desc"><p>Roles: <code>admin</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Empleado</td>
+              <td><a href="#schema-employee">Employee</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-listRestaurantEmployees">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/employees</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Listar los empleados de un restaurante</p>
+        <div class="desc"><p>Roles: <code>admin</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Empleados del restaurante</td>
+              <td><a href="#schema-employee">Employee</a>[]</td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      </section>
+      <section id="tag-ingredientes">
+        <h2>Ingredientes</h2>
+        <p class="muted">Inventario de ingredientes de un restaurante</p>
+        
+      <article class="op" id="op-listIngredients">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/ingredients</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Listar los ingredientes de un restaurante</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>, <code>cocinero</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Ingredientes del restaurante</td>
+              <td><a href="#schema-ingredient">Ingredient</a>[]</td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-createIngredient">
+        <header>
+          <span class="method m-post">POST</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/ingredients</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Crear un ingrediente</p>
+        <div class="desc"><p>Roles: <code>admin</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-ingredientinput">IngredientInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>unit</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-ingredientunit">IngredientUnit</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>currentStock</code></td>
+              <td>number</td>
+              <td>minimum: <code>0</code><br>default: <code>0</code></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">201</span></td>
+              <td>Ingrediente creado</td>
+              <td><a href="#schema-ingredient">Ingredient</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Datos inválidos (error de dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s5">500</span></td>
+              <td>Error no controlado (p. ej. faltan campos obligatorios que no valida el dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-getIngredient">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/ingredients/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Obtener un ingrediente</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>, <code>cocinero</code>. El ingrediente se busca por <code>id</code>; no se comprueba que pertenezca a <code>restaurantId</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Ingrediente</td>
+              <td><a href="#schema-ingredient">Ingredient</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-updateIngredient">
+        <header>
+          <span class="method m-put">PUT</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/ingredients/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Actualizar un ingrediente</p>
+        <div class="desc"><p>Roles: <code>admin</code>. Reemplaza <code>name</code>, <code>unit</code> y <code>currentStock</code>; envía los tres.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-ingredientinput">IngredientInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>unit</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-ingredientunit">IngredientUnit</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>currentStock</code></td>
+              <td>number</td>
+              <td>minimum: <code>0</code><br>default: <code>0</code></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Ingrediente actualizado</td>
+              <td><a href="#schema-ingredient">Ingredient</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Datos inválidos (error de dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-deleteIngredient">
+        <header>
+          <span class="method m-delete">DELETE</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/ingredients/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Borrar un ingrediente</p>
+        <div class="desc"><p>Roles: <code>admin</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">204</span></td>
+              <td>Ingrediente borrado</td>
+              <td><span class="muted">sin cuerpo</span></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      </section>
+      <section id="tag-platos">
+        <h2>Platos</h2>
+        <p class="muted">Carta de un restaurante</p>
+        
+      <article class="op" id="op-listDishes">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/dishes</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Listar todos los platos de un restaurante</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>, <code>camarero</code>, <code>cocinero</code>. Incluye los no disponibles.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Platos del restaurante</td>
+              <td><a href="#schema-dish">Dish</a>[]</td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-createDish">
+        <header>
+          <span class="method m-post">POST</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/dishes</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Crear un plato</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-dishinput">DishInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>description</code></td>
+              <td>string | null</td>
+              <td>default: <code>null</code></td>
+            </tr>
+            <tr>
+              <td><code>price</code> <span class="req">obligatorio</span></td>
+              <td>number</td>
+              <td>exclusiveMinimum: <code>0</code></td>
+            </tr>
+            <tr>
+              <td><code>category</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-dishcategory">DishCategory</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>available</code></td>
+              <td>boolean</td>
+              <td>Por defecto <code>true</code> al crear; obligatorio en la práctica al actualizar<br>default: <code>true</code></td>
+            </tr>
+            <tr>
+              <td><code>ingredients</code></td>
+              <td><a href="#schema-dishingredient">DishIngredient</a>[]</td>
+              <td>Una cantidad no positiva provoca un 500<br>default: <code>[]</code></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">201</span></td>
+              <td>Plato creado</td>
+              <td><a href="#schema-dish">Dish</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Datos inválidos (error de dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s5">500</span></td>
+              <td>Error no controlado (p. ej. faltan campos obligatorios que no valida el dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-getDish">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/dishes/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Obtener un plato</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>, <code>camarero</code>, <code>cocinero</code>. El plato se busca por <code>id</code>; no se comprueba que pertenezca a <code>restaurantId</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Plato</td>
+              <td><a href="#schema-dish">Dish</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-updateDish">
+        <header>
+          <span class="method m-put">PUT</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/dishes/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Actualizar un plato</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>. Reemplaza todos los campos, incluida la lista de ingredientes (vacía si no se envía); envía también <code>available</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-dishinput">DishInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>description</code></td>
+              <td>string | null</td>
+              <td>default: <code>null</code></td>
+            </tr>
+            <tr>
+              <td><code>price</code> <span class="req">obligatorio</span></td>
+              <td>number</td>
+              <td>exclusiveMinimum: <code>0</code></td>
+            </tr>
+            <tr>
+              <td><code>category</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-dishcategory">DishCategory</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>available</code></td>
+              <td>boolean</td>
+              <td>Por defecto <code>true</code> al crear; obligatorio en la práctica al actualizar<br>default: <code>true</code></td>
+            </tr>
+            <tr>
+              <td><code>ingredients</code></td>
+              <td><a href="#schema-dishingredient">DishIngredient</a>[]</td>
+              <td>Una cantidad no positiva provoca un 500<br>default: <code>[]</code></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Plato actualizado</td>
+              <td><a href="#schema-dish">Dish</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Datos inválidos (error de dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s5">500</span></td>
+              <td>Error no controlado (p. ej. faltan campos obligatorios que no valida el dominio)</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-deleteDish">
+        <header>
+          <span class="method m-delete">DELETE</span>
+          <code class="path">/api/v1/restaurants/{restaurantId}/dishes/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Borrar un plato</p>
+        <div class="desc"><p>Roles: <code>admin</code>, <code>manager</code>. Borra en cascada sus ingredientes asociados.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">204</span></td>
+              <td>Plato borrado</td>
+              <td><span class="muted">sin cuerpo</span></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">403</span></td>
+              <td>El rol del token no está entre los permitidos</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El recurso no existe</td>
+              <td><a href="#schema-errorresponse">ErrorResponse</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-listPublicDishes">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/public/restaurants/{restaurantId}/dishes</code>
+          <span class="auth public">Público</span>
+        </header>
+        <p class="summary">Carta pública de un restaurante</p>
+        <div class="desc"><p>Público. Solo devuelve los platos con <code>available: true</code>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Platos disponibles</td>
+              <td><a href="#schema-dish">Dish</a>[]</td>
+            </tr></tbody></table></div>
+      </article>
+      </section>
+      <section id="tag-pedidos">
+        <h2>Pedidos</h2>
+        <p class="muted">Pedidos y estado de cada unidad pedida</p>
+        
+      <article class="op" id="op-createOrder">
+        <header>
+          <span class="method m-post">POST</span>
+          <code class="path">/api/v1/orders</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Crear un pedido</p>
+        <div class="desc"><p>Roles: <strong>autenticado</strong>. El <code>clientId</code> se toma del token. Cada ítem con <code>quantity: N</code> se expande en N ítems con <code>quantity: 1</code> y estado <code>pendiente</code>, para seguir el estado de cada unidad por separado.</p>
+<p>Cualquier error (incluido un <code>restaurantId</code> vacío o inexistente) se devuelve como 400 <code>SimpleError</code>.</p></div>
+        
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type"><a href="#schema-orderinput">OrderInput</a></p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>tableId</code></td>
+              <td>string | null</td>
+              <td>default: <code>null</code></td>
+            </tr>
+            <tr>
+              <td><code>items</code> <span class="req">obligatorio</span></td>
+              <td>object[]</td>
+              <td><div class="nested"><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>dishId</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>quantity</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>Se expande en <code>quantity</code> ítems<br>minimum: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>notes</code></td>
+              <td>string | null</td>
+              <td></td>
+            </tr></tbody></table></div></div></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">201</span></td>
+              <td>Pedido creado (sin los campos enriquecidos de plato y restaurante)</td>
+              <td><a href="#schema-order">Order</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Petición inválida (los endpoints de pedidos usan <code>SimpleError</code>)</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s5">500</span></td>
+              <td>Error no controlado (<code>{ &quot;error&quot;: &quot;Internal Server Error&quot; }</code>)</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-listActiveOrders">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/orders/active</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Listar los pedidos activos de un restaurante</p>
+        <div class="desc"><p>Roles: <strong>autenticado</strong>. Devuelve, del más antiguo al más reciente, los pedidos con al menos un ítem no <code>entregado</code>. Usado por cocina, barra y salón.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>query</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Pedidos activos (ítems con datos del plato, sin datos del restaurante)</td>
+              <td><a href="#schema-order">Order</a>[]</td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Petición inválida (los endpoints de pedidos usan <code>SimpleError</code>)</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s5">500</span></td>
+              <td>Error no controlado (<code>{ &quot;error&quot;: &quot;Internal Server Error&quot; }</code>)</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-listMyOrders">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/orders/mine</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Listar mis pedidos</p>
+        <div class="desc"><p>Roles: <strong>autenticado</strong>. Devuelve los pedidos cuyo <code>clientId</code> es el <code>id</code> del token, del más reciente al más antiguo.</p></div>
+        
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Pedidos del usuario, con datos del plato y del restaurante</td>
+              <td><a href="#schema-order">Order</a>[]</td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s5">500</span></td>
+              <td>Error no controlado (<code>{ &quot;error&quot;: &quot;Internal Server Error&quot; }</code>)</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-getOrder">
+        <header>
+          <span class="method m-get">GET</span>
+          <code class="path">/api/v1/orders/{id}</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Obtener un pedido</p>
+        <div class="desc"><p>Roles: <strong>autenticado</strong>. No se comprueba que el pedido pertenezca al usuario.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">200</span></td>
+              <td>Pedido, con datos del plato y del restaurante</td>
+              <td><a href="#schema-order">Order</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">404</span></td>
+              <td>El pedido no existe</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s5">500</span></td>
+              <td>Error no controlado (<code>{ &quot;error&quot;: &quot;Internal Server Error&quot; }</code>)</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      <article class="op" id="op-updateOrderItemStatus">
+        <header>
+          <span class="method m-patch">PATCH</span>
+          <code class="path">/api/v1/orders/{orderId}/items/{itemId}/status</code>
+          <span class="auth locked">Bearer JWT</span>
+        </header>
+        <p class="summary">Cambiar el estado de un ítem de un pedido</p>
+        <div class="desc"><p>Roles: <strong>autenticado</strong>.</p></div>
+        <h4>Parámetros</h4><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>En</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>orderId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>itemId</code> <span class="req">obligatorio</span></td>
+              <td>path</td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Cuerpo de la petición <span class="req">obligatorio</span></h4><p class="schema-type">object</p><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>status</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-orderstatus">OrderStatus</a></td>
+              <td></td>
+            </tr></tbody></table></div>
+        <h4>Respuestas</h4><div class="table-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cuerpo</th></tr></thead><tbody>
+            <tr>
+              <td><span class="status s2">204</span></td>
+              <td>Estado actualizado</td>
+              <td><span class="muted">sin cuerpo</span></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">400</span></td>
+              <td>Estado inválido, o el pedido o el ítem no existen (comportamiento actual: no devuelve 404)</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s4">401</span></td>
+              <td>Falta el token, está mal formado o no es válido</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr>
+            <tr>
+              <td><span class="status s5">500</span></td>
+              <td>Error no controlado (<code>{ &quot;error&quot;: &quot;Internal Server Error&quot; }</code>)</td>
+              <td><a href="#schema-simpleerror">SimpleError</a></td>
+            </tr></tbody></table></div>
+      </article>
+      </section>
+    <section id="schemas">
+      <h2>Esquemas</h2>
+      
+      <article class="schema" id="schema-role">
+        <h3>Role</h3>
+        
+        <p>Enum (<code>string</code>): <code>admin</code>, <code>manager</code>, <code>camarero</code>, <code>cocinero</code>, <code>cliente</code></p>
+        
+        
+      </article>
+      <article class="schema" id="schema-employee">
+        <h3>Employee</h3>
+        <p>Usuario del sistema (empleado o cliente). Nunca incluye la contraseña.</p>
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>firstName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>lastName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>email</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(email)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>role</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-role">Role</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>string | null <span class="muted">(uuid)</span></td>
+              <td><code>null</code> para <code>admin</code> y <code>cliente</code></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-employeeinput">
+        <h3>EmployeeInput</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>firstName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>lastName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>email</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(email)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>password</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>role</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-role">Role</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>restaurantId</code></td>
+              <td>string | null <span class="muted">(uuid)</span></td>
+              <td>Debe existir si se indica</td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-loginrequest">
+        <h3>LoginRequest</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>email</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(email)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>password</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-registerrequest">
+        <h3>RegisterRequest</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>firstName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>lastName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>email</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(email)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>password</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-restaurant">
+        <h3>Restaurant</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>address</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>email</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(email)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>phone</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>ownerFirstName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>ownerLastName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>logoUrl</code> <span class="req">obligatorio</span></td>
+              <td>string | null</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>createdAt</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(date-time)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>updatedAt</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(date-time)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-restaurantinput">
+        <h3>RestaurantInput</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>address</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>email</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(email)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>phone</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>pattern: <code>&quot;^\\+?[\\d\\s\\-()]{7,20}$&quot;</code></td>
+            </tr>
+            <tr>
+              <td><code>ownerFirstName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>ownerLastName</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>logoUrl</code></td>
+              <td>string | null</td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-ingredientunit">
+        <h3>IngredientUnit</h3>
+        <p>Se normaliza a minúsculas sin espacios</p>
+        <p>Enum (<code>string</code>): <code>kg</code>, <code>g</code>, <code>l</code>, <code>ml</code>, <code>unidad</code></p>
+        
+        
+      </article>
+      <article class="schema" id="schema-ingredient">
+        <h3>Ingredient</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>unit</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-ingredientunit">IngredientUnit</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>currentStock</code> <span class="req">obligatorio</span></td>
+              <td>number</td>
+              <td>minimum: <code>0</code></td>
+            </tr>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>createdAt</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(date-time)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>updatedAt</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(date-time)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-ingredientinput">
+        <h3>IngredientInput</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>unit</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-ingredientunit">IngredientUnit</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>currentStock</code></td>
+              <td>number</td>
+              <td>minimum: <code>0</code><br>default: <code>0</code></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-dishcategory">
+        <h3>DishCategory</h3>
+        <p>Se normaliza a minúsculas sin espacios</p>
+        <p>Enum (<code>string</code>): <code>entrante</code>, <code>principal</code>, <code>postre</code>, <code>bebida</code></p>
+        
+        
+      </article>
+      <article class="schema" id="schema-dishingredient">
+        <h3>DishIngredient</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>ingredientId</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>quantity</code> <span class="req">obligatorio</span></td>
+              <td>number</td>
+              <td>exclusiveMinimum: <code>0</code></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-dish">
+        <h3>Dish</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>description</code> <span class="req">obligatorio</span></td>
+              <td>string | null</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>price</code> <span class="req">obligatorio</span></td>
+              <td>number</td>
+              <td>exclusiveMinimum: <code>0</code></td>
+            </tr>
+            <tr>
+              <td><code>category</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-dishcategory">DishCategory</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>available</code> <span class="req">obligatorio</span></td>
+              <td>boolean</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>ingredients</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-dishingredient">DishIngredient</a>[]</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>createdAt</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(date-time)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>updatedAt</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(date-time)</span></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-dishinput">
+        <h3>DishInput</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>name</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>minLength: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>description</code></td>
+              <td>string | null</td>
+              <td>default: <code>null</code></td>
+            </tr>
+            <tr>
+              <td><code>price</code> <span class="req">obligatorio</span></td>
+              <td>number</td>
+              <td>exclusiveMinimum: <code>0</code></td>
+            </tr>
+            <tr>
+              <td><code>category</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-dishcategory">DishCategory</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>available</code></td>
+              <td>boolean</td>
+              <td>Por defecto <code>true</code> al crear; obligatorio en la práctica al actualizar<br>default: <code>true</code></td>
+            </tr>
+            <tr>
+              <td><code>ingredients</code></td>
+              <td><a href="#schema-dishingredient">DishIngredient</a>[]</td>
+              <td>Una cantidad no positiva provoca un 500<br>default: <code>[]</code></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-orderstatus">
+        <h3>OrderStatus</h3>
+        <p>Se normaliza a minúsculas sin espacios</p>
+        <p>Enum (<code>string</code>): <code>pendiente</code>, <code>preparando</code>, <code>listo</code>, <code>entregado</code></p>
+        
+        
+      </article>
+      <article class="schema" id="schema-orderitem">
+        <h3>OrderItem</h3>
+        <p>Una unidad pedida. <code>dishName</code>, <code>dishPrice</code> y <code>dishCategory</code> solo aparecen al leer pedidos (no al crearlos).</p>
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>dishId</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>quantity</code> <span class="req">obligatorio</span></td>
+              <td><code>1</code></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>notes</code></td>
+              <td>string | null</td>
+              <td>Se omite en la respuesta de creación si no se envió</td>
+            </tr>
+            <tr>
+              <td><code>status</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-orderstatus">OrderStatus</a></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>dishName</code></td>
+              <td>string | null</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>dishPrice</code></td>
+              <td>number | null</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>dishCategory</code></td>
+              <td>string | null</td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-order">
+        <h3>Order</h3>
+        <p><code>restaurantName</code> y <code>restaurantLogoUrl</code> solo aparecen en <code>GET /orders/mine</code> y <code>GET /orders/{id}</code>.</p>
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>id</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>tableId</code> <span class="req">obligatorio</span></td>
+              <td>string | null</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>clientId</code> <span class="req">obligatorio</span></td>
+              <td>string | null</td>
+              <td><code>id</code> del usuario que creó el pedido</td>
+            </tr>
+            <tr>
+              <td><code>createdAt</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(date-time)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>items</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-orderitem">OrderItem</a>[]</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>restaurantName</code></td>
+              <td>string | null</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>restaurantLogoUrl</code></td>
+              <td>string | null</td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-orderinput">
+        <h3>OrderInput</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>restaurantId</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>tableId</code></td>
+              <td>string | null</td>
+              <td>default: <code>null</code></td>
+            </tr>
+            <tr>
+              <td><code>items</code> <span class="req">obligatorio</span></td>
+              <td>object[]</td>
+              <td><div class="nested"><div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>dishId</code> <span class="req">obligatorio</span></td>
+              <td>string <span class="muted">(uuid)</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><code>quantity</code> <span class="req">obligatorio</span></td>
+              <td>integer</td>
+              <td>Se expande en <code>quantity</code> ítems<br>minimum: <code>1</code></td>
+            </tr>
+            <tr>
+              <td><code>notes</code></td>
+              <td>string | null</td>
+              <td></td>
+            </tr></tbody></table></div></div></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-authresponse">
+        <h3>AuthResponse</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>token</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>JWT con <code>id</code>, <code>role</code> y <code>restaurantId</code></td>
+            </tr>
+            <tr>
+              <td><code>employee</code> <span class="req">obligatorio</span></td>
+              <td><a href="#schema-employee">Employee</a></td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-errorresponse">
+        <h3>ErrorResponse</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>error</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td>Nombre de la clase de error</td>
+            </tr>
+            <tr>
+              <td><code>message</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+      <article class="schema" id="schema-simpleerror">
+        <h3>SimpleError</h3>
+        
+        
+        <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Detalles</th></tr></thead><tbody>
+            <tr>
+              <td><code>error</code> <span class="req">obligatorio</span></td>
+              <td>string</td>
+              <td></td>
+            </tr></tbody></table></div>
+        
+      </article>
+    </section>
+  </main>
+</div>
+</body>
+</html>

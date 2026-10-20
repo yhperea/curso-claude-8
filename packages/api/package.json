@@ -6,7 +6,8 @@
     "dev": "tsx watch src/server.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "seed": "tsx src/scripts/seed.ts"
+    "seed": "tsx src/scripts/seed.ts",
+    "docs:build": "tsx src/scripts/build-docs.ts"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

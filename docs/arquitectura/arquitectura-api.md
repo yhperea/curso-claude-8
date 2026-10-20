@@ -343,6 +343,15 @@ El spec se escribe **a mano** en `src/docs/openapi.json` (lo carga `loadOpenApiS
 - `contract.<grupo>.test.ts`: llaman a cada endpoint con `supertest` y, con `expectMatchesSpec()` (`openapi.test-utils.ts`), comprueban que el código de estado está documentado y que las claves del cuerpo coinciden con el esquema. Los tokens se firman con `tokenFor(role, restaurantId)`.
 - `openapi.coverage.test.ts`: compara las rutas de `routeMounts` (exportado por `app.ts`) + `/health` con las operaciones del spec, en ambos sentidos. **Si añades o cambias un endpoint sin actualizar el spec, falla.**
 
+Además se versionan dos ficheros derivados del spec en [`docs/api/`](../api/), para consultarlos sin arrancar la API:
+
+| Fichero | Qué es |
+| --- | --- |
+| [`docs/api/openapi.yaml`](../api/openapi.yaml) | El mismo spec en YAML |
+| [`docs/api/index.html`](../api/index.html) | Referencia HTML estática y autocontenida (sin JS ni CDN): se abre directamente en el navegador |
+
+Se generan con `npm run docs:build` (`src/scripts/build-docs.ts`, con un emisor YAML y un renderizador HTML propios en `src/docs/openapi.yaml.ts` y `src/docs/openapi.html.ts`, sin dependencias nuevas). **No se editan a mano**: tras cambiar `openapi.json`, ejecuta `npm run docs:build`; `openapi.generated.test.ts` falla si están desactualizados.
+
 ---
 
 ## Middlewares

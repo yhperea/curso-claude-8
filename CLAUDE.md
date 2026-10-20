@@ -25,6 +25,7 @@ npm run dev:api          # API con tsx watch (http://localhost:3000/health)
 npm run dev:admin        # / dev:empleados / dev:clientes — ng serve con proxy /api → :3000
 npm run seed             # datos de prueba (idempotente, INSERT OR IGNORE)
 npm test                 # vitest run en packages/api
+npm run docs:build       # regenera docs/api/openapi.yaml e index.html desde el spec
 ```
 
 Tests de la API (solo existen ahí; los frontends no tienen tests):
@@ -54,7 +55,7 @@ Convenciones transversales:
 - Errores: `AppError` (abstracta) → `errors/DomainErrors.ts`. El `errorHandler` mapea el código HTTP **por nombre de clase**: los `*NotFoundError` listados → 404, `InvalidCredentialsError` → 401, cualquier otro `AppError` → 400. Al añadir un error 404 nuevo hay que registrarlo ahí (`OrderNotFoundError` no lo está). `OrderController` es la excepción: hace su propio try/catch en vez de `next(error)`.
 - BD: `config/database.ts` exporta la instancia `dbConfig`; las tablas se crean en `runInitialMigrations()` al arrancar (no hay herramienta de migraciones). Fichero `packages/api/resttek.db`; con `NODE_ENV=test` usa `:memory:`.
 - Endpoints bajo `/api/v1` (salvo `/health`). Rutas públicas sin auth en `/api/v1/public/...`. Al crear un pedido, cada ítem con `quantity: N` se expande a N filas de `order_items` para seguir el estado de cada unidad.
-- OpenAPI 3.1 escrito a mano en `src/docs/openapi.json`, servido en `/api/v1/docs/openapi.json` y con Swagger UI en `/api/v1/docs`. **Al añadir o cambiar un endpoint, actualiza el spec y su `src/docs/contract.<grupo>.test.ts`**: `openapi.coverage.test.ts` falla si una ruta de `routeMounts` (en `app.ts`; añade ahí los routers nuevos) no está documentada.
+- OpenAPI 3.1 escrito a mano en `src/docs/openapi.json`, servido en `/api/v1/docs/openapi.json` y con Swagger UI en `/api/v1/docs`. **Al añadir o cambiar un endpoint, actualiza el spec y su `src/docs/contract.<grupo>.test.ts`**: `openapi.coverage.test.ts` falla si una ruta de `routeMounts` (en `app.ts`; añade ahí los routers nuevos) no está documentada. Después ejecuta `npm run docs:build`, que regenera `docs/api/openapi.yaml` y `docs/api/index.html` (derivados, no se editan a mano); `openapi.generated.test.ts` falla si están desactualizados.
 - Env: `PORT`, `NODE_ENV`, `JWT_SECRET` (tiene valor por defecto).
 - Tests unitarios junto al código (`*.test.ts`), con dobles en `contexts/employee/application/mocks/` y `repositories/mocks/`. Los únicos tests HTTP son los de contrato OpenAPI (`src/docs/contract.*.test.ts`, supertest sobre la BD en memoria; tokens con `tokenFor()` de `openapi.test-utils.ts`).
 

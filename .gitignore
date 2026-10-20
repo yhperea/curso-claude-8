@@ -16,3 +16,4 @@ dist/
 # Sistema / editor
 .DS_Store
 .claude/settings.local.json
+node_modules
